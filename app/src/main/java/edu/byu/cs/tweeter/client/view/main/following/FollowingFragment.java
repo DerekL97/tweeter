@@ -27,12 +27,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import edu.byu.cs.client.R;
-import edu.byu.cs.tweeter.client.backgroundTask.GetFollowingTask;
 import edu.byu.cs.tweeter.client.backgroundTask.GetUserTask;
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.view.main.MainActivity;
 import edu.byu.cs.tweeter.model.domain.User;
-import presenter.FollowingPresenter;
+import edu.byu.cs.tweeter.client.presenter.FollowingPresenter;
 
 /**
  * Implements the "Following" tab.
@@ -74,7 +73,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_following, container, false);
 
-        user = (User) getArguments().getSerializable(USER_KEY);
+        user = (User) getArguments().getSerializable(USER_KEY); //Todo check for null pointer exception
 
         RecyclerView followingRecyclerView = view.findViewById(R.id.followingRecyclerView);
 

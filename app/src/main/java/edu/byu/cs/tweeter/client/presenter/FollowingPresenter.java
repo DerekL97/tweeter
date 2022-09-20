@@ -1,4 +1,4 @@
-package presenter;
+package edu.byu.cs.tweeter.client.presenter;
 
 import java.util.List;
 
@@ -47,10 +47,15 @@ public class FollowingPresenter {
 
         @Override
         public void addFollowees(List<User> followees, boolean hasMorePages) {
+            isLoading = false;
+            view.setLoadingFooter(false);
             lastFollowee = (followees.size() > 0) ? followees.get(followees.size() - 1) : null;
             view.addFollowees(followees);
-            view.setLoadingFooter(false);
-            isLoading = false;
+            FollowingPresenter.this.hasMorePages = hasMorePages;
+//            lastFollowee = (followees.size() > 0) ? followees.get(followees.size() - 1) : null;
+//            view.addFollowees(followees);
+//            view.setLoadingFooter(false);
+//            isLoading = false;
         }
 
         @Override
