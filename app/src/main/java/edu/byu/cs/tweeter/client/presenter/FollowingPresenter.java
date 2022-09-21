@@ -52,10 +52,6 @@ public class FollowingPresenter {
             lastFollowee = (followees.size() > 0) ? followees.get(followees.size() - 1) : null;
             view.addFollowees(followees);
             FollowingPresenter.this.hasMorePages = hasMorePages;
-//            lastFollowee = (followees.size() > 0) ? followees.get(followees.size() - 1) : null;
-//            view.addFollowees(followees);
-//            view.setLoadingFooter(false);
-//            isLoading = false;
         }
 
         @Override

@@ -289,7 +289,6 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
          */
         void loadMoreItems() {
             if (!presenter.isLoading()) {   // This guard is important for avoiding a race condition in the scrolling code.
-
                 presenter.loadMoreItems(user);
             }
         }
