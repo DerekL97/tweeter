@@ -2,33 +2,45 @@ package edu.byu.cs.tweeter.client.presenter;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Handler;
 import android.os.Message;
-import android.text.Spanned;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.List;
 
 import edu.byu.cs.tweeter.client.backgroundTask.GetUserTask;
-import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.service.FeedService;
+import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class FeedPresenter implements FeedService.FeedObserver {
     private View view;
     private FeedService service;
+    //from feedRecyclerviewAdapter
+    private Status lastStatus;
+
+
+
+    private boolean hasMorePages;
+
+    public boolean hasMorePages() {
+        return hasMorePages;
+    }
+
+    public boolean isLoading() {
+        return isLoading;
+    }
+
+    private boolean isLoading = false;//
+    //from feedFragment
+    private static final int PAGE_SIZE = 10;
 
     public FeedPresenter(View view){
         this.view = view;
         service = new FeedService(this);
     }
 
+    //methods from Service implementation
     @Override
-    public void handleMessage(Message msg) {
+    public void handleMessage(Message msg) {// todo move back to service and parse what should actually be done
         boolean success = msg.getData().getBoolean(GetUserTask.SUCCESS_KEY);
         if (success) {
             User user = (User) msg.getData().getSerializable(GetUserTask.USER_KEY);
@@ -42,24 +54,50 @@ public class FeedPresenter implements FeedService.FeedObserver {
         }
     }
 
+    @Override
+    public void setLoading(boolean loading) {
+        isLoading = loading;
+    }
+
+    @Override
+    public void setLoadingFooter(boolean footer) {
+            view.setLoadingFooter(footer);
+    }
+
+
+    @Override
+    public void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus) {
+        this.hasMorePages = hasMorePages;
+        this.lastStatus = lastStatus;
+        view.addItems(statuses);
+//        feedRecyclerViewAdapter.addItems(statuses);
+    }
+
+    @Override
+    public void displayErrorMessage(String message) {
+//        Toast.makeText(getContext(), "Failed to get feed: " + message, Toast.LENGTH_LONG).show();
+        view.printToast("Failed to get feed: " + message);
+    }
+
+    @Override
+    public void displayException(Exception ex) {
+        view.printToast("Failed to get feed because of exception: " + ex.getMessage());
+//        Toast.makeText(getContext(), "Failed to get feed because of exception: " + ex.getMessage(), Toast.LENGTH_LONG).show();
+    }
+
     public interface View{
         void startActivity(Intent intent);
         void startContextActivity(User user); // Currently only starts one type of activity
         void printToast(String message);
-
+        void setLoadingFooter(boolean set);
+        void addItems(List<Status> statuses);
     }
-    public void mentionClick(String userAlias) {
-//        TextView clickedMention = (TextView) widget;// todo should widget be in the presenter?
-//        Spanned s = (Spanned) clickedMention.getText();
-//        int start = s.getSpanStart(this);// todo: came from feedFragment (shoot, I think it was a subclass), need to change "this"?
-//        int end = s.getSpanEnd(this);
-//
-//        String clickable = s.subSequence(start, end).toString();
 
+    //Methods called by the view
+    public void mentionClick(String userAlias) {
         if (userAlias.contains("http")) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(userAlias));
             view.startActivity(intent);
-            //startActivity(intent);
         } else {
             service.getUser(userAlias);
             view.printToast("Getting user's profile...");
@@ -68,6 +106,14 @@ public class FeedPresenter implements FeedService.FeedObserver {
     public void itemViewClick(String userAlias){ //not really sure what this method does . . .
         service.getUser(userAlias);
         view.printToast("Getting user's profile...");
+    }
+
+    public void loadMoreItems(User user){
+        if (!isLoading) {   // This guard is important for avoiding a race condition in the scrolling code.
+            isLoading = true;
+            view.setLoadingFooter(true);
+            service.loadMoreItems(user, PAGE_SIZE, lastStatus);
+        }
     }
 
 
