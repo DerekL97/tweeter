@@ -1,7 +1,6 @@
 package edu.byu.cs.tweeter.client.view.main.feed;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -35,7 +34,6 @@ import java.util.concurrent.Executors;
 
 import edu.byu.cs.client.R;
 import edu.byu.cs.tweeter.client.backgroundTask.GetFeedTask;
-import edu.byu.cs.tweeter.client.backgroundTask.GetUserTask;
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.presenter.FeedPresenter;
 import edu.byu.cs.tweeter.client.view.main.MainActivity;
@@ -84,7 +82,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
 
         //noinspection ConstantConditions
         user = (User) getArguments().getSerializable(USER_KEY);
-
+        presenter = new FeedPresenter(this);
         RecyclerView feedRecyclerView = view.findViewById(R.id.feedRecyclerView);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
@@ -99,7 +97,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
     }
 
 
-    //Presenter Methods
+    //Presenter Methods     //
     @Override
     public void startContextActivity(User user) {
         Intent intent = new Intent(getContext(), MainActivity.class);
@@ -111,6 +109,8 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
     public void printToast(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
+
+    //Presenter Methods ends //
 
     /**
      * The ViewHolder for the RecyclerView that displays the feed data.
@@ -141,11 +141,6 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
                 @Override
                 public void onClick(View view) {
                     presenter.itemViewClick(userAlias.getText().toString());
-//                    GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
-//                            userAlias.getText().toString(), new GetUserHandler());
-//                    ExecutorService executor = Executors.newSingleThreadExecutor();
-//                    executor.execute(getUserTask);
-//                    Toast.makeText(getContext(), "Getting user's profile...", Toast.LENGTH_LONG).show();
                 }
             });
         }
@@ -170,7 +165,6 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
                     @Override
                     public void onClick(@NonNull View widget) {
                         presenter.mentionClick(widget);
-
                     }
 
                     @Override
