@@ -48,20 +48,20 @@ public class FeedPresenter implements FeedService.FeedObserver {
         void printToast(String message);
 
     }
-    public void mentionClick(android.view.View widget) {
-        TextView clickedMention = (TextView) widget;// todo should widget be in the presenter?
-        Spanned s = (Spanned) clickedMention.getText();
-        int start = s.getSpanStart(this);// todo: came from feedFragment (shoot, I think it was a subclass), need to change "this"?
-        int end = s.getSpanEnd(this);
+    public void mentionClick(String userAlias) {
+//        TextView clickedMention = (TextView) widget;// todo should widget be in the presenter?
+//        Spanned s = (Spanned) clickedMention.getText();
+//        int start = s.getSpanStart(this);// todo: came from feedFragment (shoot, I think it was a subclass), need to change "this"?
+//        int end = s.getSpanEnd(this);
+//
+//        String clickable = s.subSequence(start, end).toString();
 
-        String clickable = s.subSequence(start, end).toString();
-
-        if (clickable.contains("http")) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(clickable));
+        if (userAlias.contains("http")) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(userAlias));
             view.startActivity(intent);
             //startActivity(intent);
         } else {
-            service.getUser(clickable);
+            service.getUser(userAlias);
             view.printToast("Getting user's profile...");
         }
     }

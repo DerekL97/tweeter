@@ -164,7 +164,13 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
                 spannableString.setSpan(new ClickableSpan() {
                     @Override
                     public void onClick(@NonNull View widget) {
-                        presenter.mentionClick(widget);
+                        TextView clickedMention = (TextView) widget;
+                        Spanned s = (Spanned) clickedMention.getText();
+                        int start = s.getSpanStart(this);
+                        int end = s.getSpanEnd(this);
+                        String clickable = s.subSequence(start, end).toString();
+
+                        presenter.mentionClick(clickable);
                     }
 
                     @Override
