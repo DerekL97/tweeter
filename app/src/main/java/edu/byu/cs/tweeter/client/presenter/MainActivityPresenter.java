@@ -211,6 +211,7 @@ public class MainActivityPresenter {
         @Override
         public void logOutSuccess() {
             view.logout();
+            Cache.getInstance().clearCache(); //todo move to presenter
 //            logOutToast.cancel();
 //            logoutUser();
         }
