@@ -1,5 +1,7 @@
 package edu.byu.cs.tweeter.client.presenter;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.widget.Toast;
 
 import java.util.List;
@@ -34,7 +36,23 @@ public class StoryPresenter {
         userService = new UserService();
     }
 
+    public void mentionClick(String userAlias) {
+        if (userAlias.contains("http")) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(userAlias));
+            view.startActivity(intent);
+        } else {
+            userService.getUser(userAlias, Cache.getInstance().getCurrUserAuthToken(), new GetUserObserver());
+//            GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
+//                    userAlias, new StoryFragment.StoryHolder.GetUserHandler());
+//            ExecutorService executor = Executors.newSingleThreadExecutor();
+//            executor.execute(getUserTask);
+            view.displayMessage("Getting user's profile...");
+//            Toast.makeText(getContext(), "Getting user's profile...", Toast.LENGTH_LONG).show();
+        }
+    }
+
     public interface View{
+        void startActivity(Intent intent);
         void displayMessage(String message);
         void setLoadingFooter(boolean value);
         void addStatuses(List<Status> Statuses);

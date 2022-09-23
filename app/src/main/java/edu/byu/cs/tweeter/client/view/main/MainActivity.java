@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
 
         if (selectedUser.compareTo(Cache.getInstance().getCurrUser()) == 0) {
             followButton.setVisibility(View.GONE);
-        } else {
+        } else { // todo move this
             followButton.setVisibility(View.VISIBLE);
             IsFollowerTask isFollowerTask = new IsFollowerTask(Cache.getInstance().getCurrUserAuthToken(),
                     Cache.getInstance().getCurrUser(), selectedUser, new IsFollowerHandler());
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
 
         followButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {//todo move task
                 followButton.setEnabled(false);
 
                 if (followButton.getText().toString().equals(v.getContext().getString(R.string.following))) {
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         if (item.getItemId() == R.id.logoutMenu) {
             logOutToast = Toast.makeText(this, "Logging Out...", Toast.LENGTH_LONG);
             logOutToast.show();
-
+            //todo move this
             LogoutTask logoutTask = new LogoutTask(Cache.getInstance().getCurrUserAuthToken(), new LogoutHandler());
             ExecutorService executor = Executors.newSingleThreadExecutor();
             executor.execute(logoutTask);
@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         postingToast = Toast.makeText(this, "Posting Status...", Toast.LENGTH_LONG);
         postingToast.show();
 
-        try {
+        try {//todo move this
             Status newStatus = new Status(post, Cache.getInstance().getCurrUser(), getFormattedDateTime(), parseURLs(post), parseMentions(post));
             PostStatusTask statusTask = new PostStatusTask(Cache.getInstance().getCurrUserAuthToken(),
                     newStatus, new PostStatusHandler());
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         return statusFormat.format(userFormat.parse(LocalDate.now().toString() + " " + LocalTime.now().toString().substring(0, 8)));
     }
 
-    public List<String> parseURLs(String post) {
+    public List<String> parseURLs(String post) {//todo move this?
         List<String> containedUrls = new ArrayList<>();
         for (String word : post.split("\\s")) {
             if (word.startsWith("http://") || word.startsWith("https://")) {
@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         return containedUrls;
     }
 
-    public List<String> parseMentions(String post) {
+    public List<String> parseMentions(String post) {//todo move this?
         List<String> containedMentions = new ArrayList<>();
 
         for (String word : post.split("\\s")) {
@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         return containedMentions;
     }
 
-    public int findUrlEndIndex(String word) {
+    public int findUrlEndIndex(String word) {//todo move this?
         if (word.contains(".com")) {
             int index = word.indexOf(".com");
             index += 4;
@@ -256,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
     }
 
     public void updateSelectedUserFollowingAndFollowers() {
-        ExecutorService executor = Executors.newFixedThreadPool(2);
+        ExecutorService executor = Executors.newFixedThreadPool(2);// todo move this
 
         // Get count of most recently selected user's followers.
         GetFollowersCountTask followersCountTask = new GetFollowersCountTask(Cache.getInstance().getCurrUserAuthToken(),
@@ -283,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
 
     // LogoutHandler
 
-    private class LogoutHandler extends Handler {
+    private class LogoutHandler extends Handler {//todo move this
         @Override
         public void handleMessage(@NonNull Message msg) {
             boolean success = msg.getData().getBoolean(LogoutTask.SUCCESS_KEY);
@@ -302,7 +302,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
 
     // GetFollowersCountHandler
 
-    private class GetFollowersCountHandler extends Handler {
+    private class GetFollowersCountHandler extends Handler {//todo move this
         @Override
         public void handleMessage(@NonNull Message msg) {
             boolean success = msg.getData().getBoolean(GetFollowersCountTask.SUCCESS_KEY);
@@ -321,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
 
     // GetFollowingCountHandler
 
-    private class GetFollowingCountHandler extends Handler {
+    private class GetFollowingCountHandler extends Handler {//todo move this
         @Override
         public void handleMessage(@NonNull Message msg) {
             boolean success = msg.getData().getBoolean(GetFollowingCountTask.SUCCESS_KEY);
@@ -340,7 +340,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
 
     // IsFollowerHandler
 
-    private class IsFollowerHandler extends Handler {
+    private class IsFollowerHandler extends Handler {//todo move this
         @Override
         public void handleMessage(@NonNull Message msg) {
             boolean success = msg.getData().getBoolean(IsFollowerTask.SUCCESS_KEY);
@@ -368,7 +368,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
 
     // FollowHandler
 
-    private class FollowHandler extends Handler {
+    private class FollowHandler extends Handler {//todo move this
         @Override
         public void handleMessage(@NonNull Message msg) {
             boolean success = msg.getData().getBoolean(FollowTask.SUCCESS_KEY);
@@ -389,7 +389,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
 
     // UnfollowHandler
 
-    private class UnfollowHandler extends Handler {
+    private class UnfollowHandler extends Handler {//todo move this
         @Override
         public void handleMessage(@NonNull Message msg) {
             boolean success = msg.getData().getBoolean(UnfollowTask.SUCCESS_KEY);
@@ -410,7 +410,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
 
     // PostStatusHandler
 
-    private class PostStatusHandler extends Handler {
+    private class PostStatusHandler extends Handler {//todo move this
         @Override
         public void handleMessage(@NonNull Message msg) {
             boolean success = msg.getData().getBoolean(PostStatusTask.SUCCESS_KEY);
