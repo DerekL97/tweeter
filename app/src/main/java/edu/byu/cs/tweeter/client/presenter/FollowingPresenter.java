@@ -5,7 +5,6 @@ import java.util.List;
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
-import edu.byu.cs.tweeter.client.view.main.MainActivity;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class FollowingPresenter {
@@ -43,18 +42,12 @@ public class FollowingPresenter {
     public void loadMoreItems(User user) {
         isLoading = true;
         view.setLoadingFooter(true);
-        followService.loadMoreItems(Cache.getInstance().getCurrUserAuthToken(), user, PAGE_SIZE, lastFollowee, new GetFollowingObserver());
+        followService.loadMoreFollowingItems(Cache.getInstance().getCurrUserAuthToken(), user, PAGE_SIZE, lastFollowee, new GetFollowingObserver());
     }
 
     public void getUser(String userAlias){
         userService.getUser(userAlias, Cache.getInstance().getCurrUserAuthToken(), new GetUserObserver());
-//        GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
-//                userAlias, new FollowingFragment.FollowingHolder.GetUserHandler());
-//        ExecutorService executor = Executors.newSingleThreadExecutor();
-//        executor.execute(getUserTask);
         view.displayMessage("Getting user's profile...");
-//        Toast.makeText(getContext(), "Getting user's profile...", Toast.LENGTH_LONG).show();
-
     }
 
     private class GetFollowingObserver implements FollowService.GetFollowingObserver {
@@ -88,9 +81,6 @@ public class FollowingPresenter {
 
         @Override
         public void loadUser(User user) {
-//                Intent intent = new Intent(getContext(), MainActivity.class);
-//                intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
-//                startActivity(intent);
                 view.showUser(user);
         }
 
