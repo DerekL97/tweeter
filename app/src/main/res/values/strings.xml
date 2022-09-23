@@ -16,8 +16,8 @@
     <string name="afterUploadPicture">Retake Profile Picture</string>
     <string name="registerButton">Register</string>
 
-    <string name="follow">Follow</string>
-    <string name="following">Following</string>
+    <string name="Follow">Follow</string>
+    <string name="Following">Following</string>
 
     <string name="dialogStatusHint">What is on your mind?</string>
 
