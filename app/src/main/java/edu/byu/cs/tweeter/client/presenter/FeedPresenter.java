@@ -2,95 +2,74 @@ package edu.byu.cs.tweeter.client.presenter;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Message;
 
 import java.util.List;
 
-import edu.byu.cs.tweeter.client.backgroundTask.GetUserTask;
+import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.service.FeedService;
+import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class FeedPresenter implements FeedService.FeedObserver {
+public class FeedPresenter {
     private View view;
-    private FeedService service;
-    //from feedRecyclerviewAdapter
+    private UserService userService;
+    private FeedService feedService;
+
     private Status lastStatus;
-
-
-
     private boolean hasMorePages;
-
-    public boolean hasMorePages() {
-        return hasMorePages;
-    }
-
-    public boolean isLoading() {
-        return isLoading;
-    }
-
-    private boolean isLoading = false;//
-    //from feedFragment
+    private boolean isLoading = false;
     private static final int PAGE_SIZE = 10;
 
     public FeedPresenter(View view){
         this.view = view;
-        service = new FeedService(this);
+        feedService = new FeedService();
+        userService = new UserService();
     }
 
-    //methods from Service implementation
-    @Override
-    public void handleMessage(Message msg) {// todo move back to service and parse what should actually be done
-        boolean success = msg.getData().getBoolean(GetUserTask.SUCCESS_KEY);
-        if (success) {
-            User user = (User) msg.getData().getSerializable(GetUserTask.USER_KEY);
-            view.startContextActivity(user);
-        } else if (msg.getData().containsKey(GetUserTask.MESSAGE_KEY)) {
-            String message = msg.getData().getString(GetUserTask.MESSAGE_KEY);
-            view.printToast("Failed to get user's profile: " + message);
-        } else if (msg.getData().containsKey(GetUserTask.EXCEPTION_KEY)) {
-            Exception ex = (Exception) msg.getData().getSerializable(GetUserTask.EXCEPTION_KEY);
-            view.printToast("Failed to get user's profile because of exception: " + ex.getMessage());
-        }
+    public boolean hasMorePages() {
+        return hasMorePages;
     }
-
-    @Override
-    public void setLoading(boolean loading) {
-        isLoading = loading;
-    }
-
-    @Override
-    public void setLoadingFooter(boolean footer) {
-            view.setLoadingFooter(footer);
+    public boolean isLoading() {
+        return isLoading;
     }
 
 
-    @Override
-    public void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus) {
-        this.hasMorePages = hasMorePages;
-        this.lastStatus = lastStatus;
-        view.addItems(statuses);
-//        feedRecyclerViewAdapter.addItems(statuses);
-    }
 
-    @Override
-    public void displayErrorMessage(String message) {
-//        Toast.makeText(getContext(), "Failed to get feed: " + message, Toast.LENGTH_LONG).show();
-        view.printToast("Failed to get feed: " + message);
-    }
+//    @Override
+//    public void handleMessage(Message msg) {// todo move back to service and parse what should actually be done
+//        boolean success = msg.getData().getBoolean(GetUserTask.SUCCESS_KEY);
+//        if (success) {
+//            User user = (User) msg.getData().getSerializable(GetUserTask.USER_KEY);
+//            view.startContextActivity(user);
+//        } else if (msg.getData().containsKey(GetUserTask.MESSAGE_KEY)) {
+//            String message = msg.getData().getString(GetUserTask.MESSAGE_KEY);
+//            view.printToast("Failed to get user's profile: " + message);
+//        } else if (msg.getData().containsKey(GetUserTask.EXCEPTION_KEY)) {
+//            Exception ex = (Exception) msg.getData().getSerializable(GetUserTask.EXCEPTION_KEY);
+//            view.printToast("Failed to get user's profile because of exception: " + ex.getMessage());
+//        }
+//    }
+//
+//    @Override
+//    public void setLoading(boolean loading) {
+//        isLoading = loading;
+//    }
+//
+//    @Override
+//    public void setLoadingFooter(boolean footer) {
+//            view.setLoadingFooter(footer);
+//    }
 
-    @Override
-    public void displayException(Exception ex) {
-        view.printToast("Failed to get feed because of exception: " + ex.getMessage());
-//        Toast.makeText(getContext(), "Failed to get feed because of exception: " + ex.getMessage(), Toast.LENGTH_LONG).show();
-    }
+
 
     public interface View{
         void startActivity(Intent intent);
-        void startContextActivity(User user); // Currently only starts one type of activity
-        void printToast(String message);
+//        void startContextActivity(User user); // Currently only starts one type of activity
+        void displayMessage(String message);
         void setLoadingFooter(boolean set);
         void addItems(List<Status> statuses);
+        void showUser(User user);
     }
 
     //Methods called by the view
@@ -99,22 +78,72 @@ public class FeedPresenter implements FeedService.FeedObserver {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(userAlias));
             view.startActivity(intent);
         } else {
-            service.getUser(userAlias);
-            view.printToast("Getting user's profile...");
+            userService.getUser(userAlias, Cache.getInstance().getCurrUserAuthToken(), new GetUserObserver());
+            view.displayMessage("Getting user's profile...");
         }
     }
     public void itemViewClick(String userAlias){ //not really sure what this method does . . .
-        service.getUser(userAlias);
-        view.printToast("Getting user's profile...");
+        userService.getUser(userAlias, Cache.getInstance().getCurrUserAuthToken(), new GetUserObserver());
+        view.displayMessage("Getting user's profile...");
     }
 
     public void loadMoreItems(User user){
         if (!isLoading) {   // This guard is important for avoiding a race condition in the scrolling code.
             isLoading = true;
             view.setLoadingFooter(true);
-            service.loadMoreItems(user, PAGE_SIZE, lastStatus);
+            feedService.loadMoreItems(user, PAGE_SIZE, lastStatus, new GetFeedObserver());
+        }
+    }
+    private class GetFeedObserver implements FeedService.GetFeedObserver {
+
+        //methods from FeedService implementation
+        @Override
+        public void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus) {
+            isLoading = false;
+            view.setLoadingFooter(false);
+            FeedPresenter.this.hasMorePages = hasMorePages;
+            FeedPresenter.this.lastStatus = lastStatus;
+            view.addItems(statuses);
+//        feedRecyclerViewAdapter.addItems(statuses);
+        }
+
+        @Override
+        public void displayErrorMessage(String message) {
+            isLoading = false;
+            view.setLoadingFooter(false);
+//        Toast.makeText(getContext(), "Failed to get feed: " + message, Toast.LENGTH_LONG).show();
+            view.displayMessage("Failed to get feed: " + message);
+        }
+
+        @Override
+        public void displayException(Exception ex) {
+            isLoading = false;
+            view.setLoadingFooter(false);
+            view.displayMessage("Failed to get feed because of exception: " + ex.getMessage());
+//        Toast.makeText(getContext(), "Failed to get feed because of exception: " + ex.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
+    private class GetUserObserver implements UserService.GetUserObserver{
+
+        @Override
+        public void loadUser(User user) {
+//                Intent intent = new Intent(getContext(), MainActivity.class);
+//                intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
+//                startActivity(intent);
+            view.showUser(user);
+        }
+
+        @Override
+        public void displayErrorMessage(String message) {
+            view.displayMessage("Failed to get user's profile: " + message);
+//            Toast.makeText(getContext(), "Failed to get user's profile: " + message, Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void displayException(Exception ex) {
+            view.displayMessage("Failed to get user's profile because of exception: " + ex.getMessage());
+        }
+    }
 
 }

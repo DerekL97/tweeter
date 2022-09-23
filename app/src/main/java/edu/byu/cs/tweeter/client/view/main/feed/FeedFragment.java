@@ -93,15 +93,15 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
 
 
     //Presenter Methods     //
-    @Override
-    public void startContextActivity(User user) {
-        Intent intent = new Intent(getContext(), MainActivity.class);
-        intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
-        startActivity(intent);
-    }
+//    @Override
+//    public void startContextActivity(User user) {
+//        Intent intent = new Intent(getContext(), MainActivity.class);
+//        intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
+//        startActivity(intent);
+//    }
 
     @Override
-    public void printToast(String message) {
+    public void displayMessage(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
@@ -117,6 +117,13 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
     @Override
     public void addItems(List<Status> statuses) {
         feedRecyclerViewAdapter.addItems(statuses);
+    }
+
+    @Override
+    public void showUser(User user) {
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
+        startActivity(intent);
     }
 
     //Presenter Methods ends //
@@ -211,9 +218,9 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
         private final List<Status> feed = new ArrayList<>();
 
 
-        /**
-         * Creates an instance and loads the first page of feed data.
-         */
+//        /**
+//         * Creates an instance and loads the first page of feed data.
+//         */
 //        FeedRecyclerViewAdapter() {
 //            loadMoreItems();
 //        }
@@ -352,9 +359,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
         }
 
 
-        /**
-         * Message handler (i.e., observer) for GetFeedTask.
-         */
+
 
     }
 

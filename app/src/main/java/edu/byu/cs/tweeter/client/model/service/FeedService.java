@@ -2,7 +2,6 @@ package edu.byu.cs.tweeter.client.model.service;
 
 import android.os.Handler;
 import android.os.Message;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -11,58 +10,57 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import edu.byu.cs.tweeter.client.backgroundTask.GetFeedTask;
-import edu.byu.cs.tweeter.client.backgroundTask.GetUserTask;
 import edu.byu.cs.tweeter.client.cache.Cache;
-import edu.byu.cs.tweeter.client.presenter.FeedPresenter;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class FeedService {
-    private FeedObserver observer;
+    private GetFeedObserver observer;
 
-    public FeedService(FeedObserver observer){
-        this.observer = observer;
-    }
+//    public FeedService(FeedObserver observer){
+//        this.observer = observer;
+//    }
 
-    public interface FeedObserver{
-        void handleMessage(Message msg);
-        void setLoading(boolean loading);
-        void setLoadingFooter(boolean footer);
+    public interface GetFeedObserver {
+//        void handleMessage(Message msg);
+//        void setLoading(boolean loading);
+//        void setLoadingFooter(boolean footer);
         void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus);
         void displayErrorMessage(String message);
         void displayException(Exception ex);
     }
 
-    public void getUser(String userAlias){
-        GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
-                userAlias, new GetUserHandler());
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(getUserTask);
-    }
+//    public void getUser(String userAlias){
+//        GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
+//                userAlias, new GetUserHandler());
+//        ExecutorService executor = Executors.newSingleThreadExecutor();
+//        executor.execute(getUserTask);
+//    }
 
-    /**
-     * Message handler (i.e., observer) for GetUserTask.
-     */
-    private class GetUserHandler extends Handler { //todo this whole class should move I think maybe to service?
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            observer.handleMessage(msg);
-
-        }
-    }
-    public void loadMoreItems(User user, int PAGE_SIZE, Status lastStatus) {
+//    /**
+//     * Message handler (i.e., observer) for GetUserTask.
+//     */
+//    private class GetUserHandler extends Handler { //todo this whole class should move I think maybe to service?
+//        @Override
+//        public void handleMessage(@NonNull Message msg) {
+//            observer.handleMessage(msg);
+//
+//        }
+//    }
+    public void loadMoreItems(User user, int PAGE_SIZE, Status lastStatus, GetFeedObserver feedObserver) {
         GetFeedTask getFeedTask = new GetFeedTask(Cache.getInstance().getCurrUserAuthToken(),
-                user, PAGE_SIZE, lastStatus, new GetFeedHandler());
+                user, PAGE_SIZE, lastStatus, new GetFeedHandler(feedObserver));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(getFeedTask);
     }
 
-    private class GetFeedHandler extends Handler {// todo move to feedService
+    private class GetFeedHandler extends Handler {
+        private GetFeedObserver observer;
+        public GetFeedHandler(GetFeedObserver observer){
+            this.observer = observer;
+        }
         @Override
         public void handleMessage(@NonNull Message msg) {
-            observer.setLoading(false);
-            observer.setLoadingFooter(false);
-
             boolean success = msg.getData().getBoolean(GetFeedTask.SUCCESS_KEY);
             if (success) {
                 List<Status> statuses = (List<Status>) msg.getData().getSerializable(GetFeedTask.STATUSES_KEY);
