@@ -201,12 +201,6 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
             post.setClickable(true);
             post.setMovementMethod(LinkMovementMethod.getInstance());
         }
-
-        /**
-         * Message handler (i.e., observer) for GetUserTask.
-         */
-
-
     }
 
     /**

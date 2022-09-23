@@ -40,7 +40,9 @@ public class FeedService {
         executor.execute(getUserTask);
     }
 
-
+    /**
+     * Message handler (i.e., observer) for GetUserTask.
+     */
     private class GetUserHandler extends Handler { //todo this whole class should move I think maybe to service?
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -59,25 +61,20 @@ public class FeedService {
         @Override
         public void handleMessage(@NonNull Message msg) {
             observer.setLoading(false);
-//            isLoading = false;
             observer.setLoadingFooter(false);
-//            removeLoadingFooter();
 
             boolean success = msg.getData().getBoolean(GetFeedTask.SUCCESS_KEY);
             if (success) {
                 List<Status> statuses = (List<Status>) msg.getData().getSerializable(GetFeedTask.STATUSES_KEY);
                 boolean hasMorePages = msg.getData().getBoolean(GetFeedTask.MORE_PAGES_KEY);
                 Status lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() - 1) : null;
-//                feedRecyclerViewAdapter.addItems(statuses);
                 observer.addItems(statuses, hasMorePages, lastStatus);
             } else if (msg.getData().containsKey(GetFeedTask.MESSAGE_KEY)) {
                 String message = msg.getData().getString(GetFeedTask.MESSAGE_KEY);
                 observer.displayErrorMessage(message);
-//                Toast.makeText(getContext(), "Failed to get feed: " + message, Toast.LENGTH_LONG).show();
             } else if (msg.getData().containsKey(GetFeedTask.EXCEPTION_KEY)) {
                 Exception ex = (Exception) msg.getData().getSerializable(GetFeedTask.EXCEPTION_KEY);
                 observer.displayException(ex);
-//                Toast.makeText(getContext(), "Failed to get feed because of exception: " + ex.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
     }
