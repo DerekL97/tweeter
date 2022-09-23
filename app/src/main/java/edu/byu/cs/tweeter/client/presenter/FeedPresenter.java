@@ -35,41 +35,12 @@ public class FeedPresenter {
     }
 
 
-
-//    @Override
-//    public void handleMessage(Message msg) {// todo move back to service and parse what should actually be done
-//        boolean success = msg.getData().getBoolean(GetUserTask.SUCCESS_KEY);
-//        if (success) {
-//            User user = (User) msg.getData().getSerializable(GetUserTask.USER_KEY);
-//            view.startContextActivity(user);
-//        } else if (msg.getData().containsKey(GetUserTask.MESSAGE_KEY)) {
-//            String message = msg.getData().getString(GetUserTask.MESSAGE_KEY);
-//            view.printToast("Failed to get user's profile: " + message);
-//        } else if (msg.getData().containsKey(GetUserTask.EXCEPTION_KEY)) {
-//            Exception ex = (Exception) msg.getData().getSerializable(GetUserTask.EXCEPTION_KEY);
-//            view.printToast("Failed to get user's profile because of exception: " + ex.getMessage());
-//        }
-//    }
-//
-//    @Override
-//    public void setLoading(boolean loading) {
-//        isLoading = loading;
-//    }
-//
-//    @Override
-//    public void setLoadingFooter(boolean footer) {
-//            view.setLoadingFooter(footer);
-//    }
-
-
-
     public interface View{
         void startActivity(Intent intent);
-//        void startContextActivity(User user); // Currently only starts one type of activity
         void displayMessage(String message);
         void setLoadingFooter(boolean set);
         void addItems(List<Status> statuses);
-        void showUser(User user);
+        void showUser(User user); //Starts a userActivity with the passed user as the base
     }
 
     //Methods called by the view
@@ -94,8 +65,9 @@ public class FeedPresenter {
             feedService.loadMoreItems(user, PAGE_SIZE, lastStatus, new GetFeedObserver());
         }
     }
-    private class GetFeedObserver implements FeedService.GetFeedObserver {
+    //End Methods called by the view
 
+    private class GetFeedObserver implements FeedService.GetFeedObserver {
         //methods from FeedService implementation
         @Override
         public void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus) {
@@ -104,14 +76,12 @@ public class FeedPresenter {
             FeedPresenter.this.hasMorePages = hasMorePages;
             FeedPresenter.this.lastStatus = lastStatus;
             view.addItems(statuses);
-//        feedRecyclerViewAdapter.addItems(statuses);
         }
 
         @Override
         public void displayErrorMessage(String message) {
             isLoading = false;
             view.setLoadingFooter(false);
-//        Toast.makeText(getContext(), "Failed to get feed: " + message, Toast.LENGTH_LONG).show();
             view.displayMessage("Failed to get feed: " + message);
         }
 
@@ -120,7 +90,6 @@ public class FeedPresenter {
             isLoading = false;
             view.setLoadingFooter(false);
             view.displayMessage("Failed to get feed because of exception: " + ex.getMessage());
-//        Toast.makeText(getContext(), "Failed to get feed because of exception: " + ex.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -128,16 +97,12 @@ public class FeedPresenter {
 
         @Override
         public void loadUser(User user) {
-//                Intent intent = new Intent(getContext(), MainActivity.class);
-//                intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
-//                startActivity(intent);
             view.showUser(user);
         }
 
         @Override
         public void displayErrorMessage(String message) {
             view.displayMessage("Failed to get user's profile: " + message);
-//            Toast.makeText(getContext(), "Failed to get user's profile: " + message, Toast.LENGTH_LONG).show();
         }
 
         @Override

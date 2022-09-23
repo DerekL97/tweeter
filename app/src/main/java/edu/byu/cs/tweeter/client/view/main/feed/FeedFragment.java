@@ -93,13 +93,6 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
 
 
     //Presenter Methods     //
-//    @Override
-//    public void startContextActivity(User user) {
-//        Intent intent = new Intent(getContext(), MainActivity.class);
-//        intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
-//        startActivity(intent);
-//    }
-
     @Override
     public void displayMessage(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
@@ -125,7 +118,6 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
         intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
         startActivity(intent);
     }
-
     //Presenter Methods ends //
 
     /**
@@ -216,15 +208,6 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
     private class FeedRecyclerViewAdapter extends RecyclerView.Adapter<FeedHolder> {
 
         private final List<Status> feed = new ArrayList<>();
-
-
-//        /**
-//         * Creates an instance and loads the first page of feed data.
-//         */
-//        FeedRecyclerViewAdapter() {
-//            loadMoreItems();
-//        }
-
         /**
          * Adds new statuses to the list from which the RecyclerView retrieves the statuses it displays
          * and notifies the RecyclerView that items have been added.
@@ -327,15 +310,6 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
          */
         void loadMoreItems(){
             presenter.loadMoreItems(user);
-//            if (!isLoading) {   // This guard is important for avoiding a race condition in the scrolling code.
-//                isLoading = true;
-//                addLoadingFooter();
-//
-//                GetFeedTask getFeedTask = new GetFeedTask(Cache.getInstance().getCurrUserAuthToken(),
-//                        user, PAGE_SIZE, lastStatus, new GetFeedHandler());
-//                ExecutorService executor = Executors.newSingleThreadExecutor();
-//                executor.execute(getFeedTask);
-//            }
         }
 
         /**

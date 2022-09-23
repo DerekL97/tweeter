@@ -30,23 +30,6 @@ public class FeedService {
         void displayException(Exception ex);
     }
 
-//    public void getUser(String userAlias){
-//        GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
-//                userAlias, new GetUserHandler());
-//        ExecutorService executor = Executors.newSingleThreadExecutor();
-//        executor.execute(getUserTask);
-//    }
-
-//    /**
-//     * Message handler (i.e., observer) for GetUserTask.
-//     */
-//    private class GetUserHandler extends Handler { //todo this whole class should move I think maybe to service?
-//        @Override
-//        public void handleMessage(@NonNull Message msg) {
-//            observer.handleMessage(msg);
-//
-//        }
-//    }
     public void loadMoreItems(User user, int PAGE_SIZE, Status lastStatus, GetFeedObserver feedObserver) {
         GetFeedTask getFeedTask = new GetFeedTask(Cache.getInstance().getCurrUserAuthToken(),
                 user, PAGE_SIZE, lastStatus, new GetFeedHandler(feedObserver));
