@@ -150,9 +150,10 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
             logOutToast = Toast.makeText(this, "Logging Out...", Toast.LENGTH_LONG);
             logOutToast.show();
             //todo move this
-            LogoutTask logoutTask = new LogoutTask(Cache.getInstance().getCurrUserAuthToken(), new LogoutHandler());
-            ExecutorService executor = Executors.newSingleThreadExecutor();
-            executor.execute(logoutTask);
+            presenter.onOptionsItemSelected();
+//            LogoutTask logoutTask = new LogoutTask(Cache.getInstance().getCurrUserAuthToken(), new LogoutHandler());
+//            ExecutorService executor = Executors.newSingleThreadExecutor();
+//            executor.execute(logoutTask);
 
             return true;
         } else {
@@ -195,6 +196,18 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
             followeeCount.setText(getString(R.string.followeeCount, String.valueOf(count)));
         }
 
+        @Override
+        public void logout() {
+            logOutToast.cancel();
+            logoutUser();
+        }
+
+        @Override
+        public void postedStatus() {
+            postingToast.cancel();
+            Toast.makeText(MainActivity.this, "Successfully Posted!", Toast.LENGTH_LONG).show();
+        }
+
 
     }
 
@@ -214,11 +227,12 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         postingToast.show();
 
         try {//todo move this
-            Status newStatus = new Status(post, Cache.getInstance().getCurrUser(), getFormattedDateTime(), parseURLs(post), parseMentions(post));
-            PostStatusTask statusTask = new PostStatusTask(Cache.getInstance().getCurrUserAuthToken(),
-                    newStatus, new PostStatusHandler());
-            ExecutorService executor = Executors.newSingleThreadExecutor();
-            executor.execute(statusTask);
+            presenter.postStatus(post);
+//            Status newStatus = new Status(post, Cache.getInstance().getCurrUser(), getFormattedDateTime(), parseURLs(post), parseMentions(post));
+//            PostStatusTask statusTask = new PostStatusTask(Cache.getInstance().getCurrUserAuthToken(),
+//                    newStatus, new PostStatusHandler());
+//            ExecutorService executor = Executors.newSingleThreadExecutor();
+//            executor.execute(statusTask);
         } catch (Exception ex) {
             Log.e(LOG_TAG, ex.getMessage(), ex);
             Toast.makeText(this, "Failed to post the status because of exception: " + ex.getMessage(), Toast.LENGTH_LONG).show();
@@ -232,62 +246,62 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         return statusFormat.format(userFormat.parse(LocalDate.now().toString() + " " + LocalTime.now().toString().substring(0, 8)));
     }
 
-    public List<String> parseURLs(String post) {//todo move this?
-        List<String> containedUrls = new ArrayList<>();
-        for (String word : post.split("\\s")) {
-            if (word.startsWith("http://") || word.startsWith("https://")) {
+//    public List<String> parseURLs(String post) {//todo move this?
+//        List<String> containedUrls = new ArrayList<>();
+//        for (String word : post.split("\\s")) {
+//            if (word.startsWith("http://") || word.startsWith("https://")) {
+//
+//                int index = findUrlEndIndex(word);
+//
+//                word = word.substring(0, index);
+//
+//                containedUrls.add(word);
+//            }
+//        }
+//
+//        return containedUrls;
+//    }
 
-                int index = findUrlEndIndex(word);
+//    public List<String> parseMentions(String post) {//todo move this?
+//        List<String> containedMentions = new ArrayList<>();
+//
+//        for (String word : post.split("\\s")) {
+//            if (word.startsWith("@")) {
+//                word = word.replaceAll("[^a-zA-Z0-9]", "");
+//                word = "@".concat(word);
+//
+//                containedMentions.add(word);
+//            }
+//        }
+//
+//        return containedMentions;
+//    }
 
-                word = word.substring(0, index);
-
-                containedUrls.add(word);
-            }
-        }
-
-        return containedUrls;
-    }
-
-    public List<String> parseMentions(String post) {//todo move this?
-        List<String> containedMentions = new ArrayList<>();
-
-        for (String word : post.split("\\s")) {
-            if (word.startsWith("@")) {
-                word = word.replaceAll("[^a-zA-Z0-9]", "");
-                word = "@".concat(word);
-
-                containedMentions.add(word);
-            }
-        }
-
-        return containedMentions;
-    }
-
-    public int findUrlEndIndex(String word) {//todo move this?
-        if (word.contains(".com")) {
-            int index = word.indexOf(".com");
-            index += 4;
-            return index;
-        } else if (word.contains(".org")) {
-            int index = word.indexOf(".org");
-            index += 4;
-            return index;
-        } else if (word.contains(".edu")) {
-            int index = word.indexOf(".edu");
-            index += 4;
-            return index;
-        } else if (word.contains(".net")) {
-            int index = word.indexOf(".net");
-            index += 4;
-            return index;
-        } else if (word.contains(".mil")) {
-            int index = word.indexOf(".mil");
-            index += 4;
-            return index;
-        } else {
-            return word.length();
-        }
-    }
+//    public int findUrlEndIndex(String word) {//todo move this?
+//        if (word.contains(".com")) {
+//            int index = word.indexOf(".com");
+//            index += 4;
+//            return index;
+//        } else if (word.contains(".org")) {
+//            int index = word.indexOf(".org");
+//            index += 4;
+//            return index;
+//        } else if (word.contains(".edu")) {
+//            int index = word.indexOf(".edu");
+//            index += 4;
+//            return index;
+//        } else if (word.contains(".net")) {
+//            int index = word.indexOf(".net");
+//            index += 4;
+//            return index;
+//        } else if (word.contains(".mil")) {
+//            int index = word.indexOf(".mil");
+//            index += 4;
+//            return index;
+//        } else {
+//            return word.length();
+//        }
+//    }
 
 //    public void updateSelectedUserFollowingAndFollowers() {
 //        ExecutorService executor = Executors.newFixedThreadPool(2);// todo move this
@@ -317,22 +331,7 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
 
     // LogoutHandler
 
-    private class LogoutHandler extends Handler {//todo move this
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            boolean success = msg.getData().getBoolean(LogoutTask.SUCCESS_KEY);
-            if (success) {
-                logOutToast.cancel();
-                logoutUser();
-            } else if (msg.getData().containsKey(LogoutTask.MESSAGE_KEY)) {
-                String message = msg.getData().getString(LogoutTask.MESSAGE_KEY);
-                Toast.makeText(MainActivity.this, "Failed to logout: " + message, Toast.LENGTH_LONG).show();
-            } else if (msg.getData().containsKey(LogoutTask.EXCEPTION_KEY)) {
-                Exception ex = (Exception) msg.getData().getSerializable(LogoutTask.EXCEPTION_KEY);
-                Toast.makeText(MainActivity.this, "Failed to logout because of exception: " + ex.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        }
-    }
+
 
     // GetFollowersCountHandler
 
@@ -423,42 +422,42 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
 
     // UnfollowHandler
 
-    private class UnfollowHandler extends Handler {//todo move this
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            boolean success = msg.getData().getBoolean(UnfollowTask.SUCCESS_KEY);
-            if (success) {
-                presenter.updateSelectedUserFollowingAndFollowers();
-                updateFollowButton(true);
-            } else if (msg.getData().containsKey(UnfollowTask.MESSAGE_KEY)) {
-                String message = msg.getData().getString(UnfollowTask.MESSAGE_KEY);
-                Toast.makeText(MainActivity.this, "Failed to unfollow: " + message, Toast.LENGTH_LONG).show();
-            } else if (msg.getData().containsKey(UnfollowTask.EXCEPTION_KEY)) {
-                Exception ex = (Exception) msg.getData().getSerializable(UnfollowTask.EXCEPTION_KEY);
-                Toast.makeText(MainActivity.this, "Failed to unfollow because of exception: " + ex.getMessage(), Toast.LENGTH_LONG).show();
-            }
-
-            followButton.setEnabled(true);
-        }
-    }
+//    private class UnfollowHandler extends Handler {
+//        @Override
+//        public void handleMessage(@NonNull Message msg) {
+//            boolean success = msg.getData().getBoolean(UnfollowTask.SUCCESS_KEY);
+//            if (success) {
+//                presenter.updateSelectedUserFollowingAndFollowers();
+//                updateFollowButton(true);
+//            } else if (msg.getData().containsKey(UnfollowTask.MESSAGE_KEY)) {
+//                String message = msg.getData().getString(UnfollowTask.MESSAGE_KEY);
+//                Toast.makeText(MainActivity.this, "Failed to unfollow: " + message, Toast.LENGTH_LONG).show();
+//            } else if (msg.getData().containsKey(UnfollowTask.EXCEPTION_KEY)) {
+//                Exception ex = (Exception) msg.getData().getSerializable(UnfollowTask.EXCEPTION_KEY);
+//                Toast.makeText(MainActivity.this, "Failed to unfollow because of exception: " + ex.getMessage(), Toast.LENGTH_LONG).show();
+//            }
+//
+//            followButton.setEnabled(true);
+//        }
+//    }
 
     // PostStatusHandler
 
-    private class PostStatusHandler extends Handler {//todo move this
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            boolean success = msg.getData().getBoolean(PostStatusTask.SUCCESS_KEY);
-            if (success) {
-                postingToast.cancel();
-                Toast.makeText(MainActivity.this, "Successfully Posted!", Toast.LENGTH_LONG).show();
-            } else if (msg.getData().containsKey(PostStatusTask.MESSAGE_KEY)) {
-                String message = msg.getData().getString(PostStatusTask.MESSAGE_KEY);
-                Toast.makeText(MainActivity.this, "Failed to post status: " + message, Toast.LENGTH_LONG).show();
-            } else if (msg.getData().containsKey(PostStatusTask.EXCEPTION_KEY)) {
-                Exception ex = (Exception) msg.getData().getSerializable(PostStatusTask.EXCEPTION_KEY);
-                Toast.makeText(MainActivity.this, "Failed to post status because of exception: " + ex.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        }
-    }
+//    private class PostStatusHandler extends Handler {//todo move this
+//        @Override
+//        public void handleMessage(@NonNull Message msg) {
+//            boolean success = msg.getData().getBoolean(PostStatusTask.SUCCESS_KEY);
+//            if (success) {
+//                postingToast.cancel();
+//                Toast.makeText(MainActivity.this, "Successfully Posted!", Toast.LENGTH_LONG).show();
+//            } else if (msg.getData().containsKey(PostStatusTask.MESSAGE_KEY)) {
+//                String message = msg.getData().getString(PostStatusTask.MESSAGE_KEY);
+//                Toast.makeText(MainActivity.this, "Failed to post status: " + message, Toast.LENGTH_LONG).show();
+//            } else if (msg.getData().containsKey(PostStatusTask.EXCEPTION_KEY)) {
+//                Exception ex = (Exception) msg.getData().getSerializable(PostStatusTask.EXCEPTION_KEY);
+//                Toast.makeText(MainActivity.this, "Failed to post status because of exception: " + ex.getMessage(), Toast.LENGTH_LONG).show();
+//            }
+//        }
+//    }
 
 }

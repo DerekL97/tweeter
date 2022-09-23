@@ -11,7 +11,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import edu.byu.cs.tweeter.client.backgroundTask.GetStoryTask;
+import edu.byu.cs.tweeter.client.backgroundTask.PostStatusTask;
 import edu.byu.cs.tweeter.client.cache.Cache;
+import edu.byu.cs.tweeter.client.presenter.MainActivityPresenter;
+import edu.byu.cs.tweeter.client.view.main.MainActivity;
+import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
@@ -64,4 +68,40 @@ public class StatusService {
             }
         }
     }
+
+    public interface PostStatusObserver{
+        public void postedStatus();
+        public void displayErrorMessage(String message);
+        public void displayException(Exception ex);
+    }
+    public void startStatusTask(AuthToken authToken, Status newStatus, MainActivityPresenter.postStatusObserver observer){
+        PostStatusTask statusTask = new PostStatusTask(Cache.getInstance().getCurrUserAuthToken(),
+                newStatus, new PostStatusHandler(observer));
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(statusTask);
+    }
+    private class PostStatusHandler extends Handler {//todo move this
+        private PostStatusObserver observer;
+        public PostStatusHandler(PostStatusObserver observer){
+            this.observer = observer;
+        }
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            boolean success = msg.getData().getBoolean(PostStatusTask.SUCCESS_KEY);
+            if (success) {
+                observer.postedStatus();
+//                postingToast.cancel();
+//                Toast.makeText(MainActivity.this, "Successfully Posted!", Toast.LENGTH_LONG).show();
+            } else if (msg.getData().containsKey(PostStatusTask.MESSAGE_KEY)) {
+                String message = msg.getData().getString(PostStatusTask.MESSAGE_KEY);
+                observer.displayErrorMessage(message);
+//                Toast.makeText(MainActivity.this, "Failed to post status: " + message, Toast.LENGTH_LONG).show();
+            } else if (msg.getData().containsKey(PostStatusTask.EXCEPTION_KEY)) {
+                Exception ex = (Exception) msg.getData().getSerializable(PostStatusTask.EXCEPTION_KEY);
+                observer.displayException(ex);
+//                Toast.makeText(MainActivity.this, "Failed to post status because of exception: " + ex.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
 }
