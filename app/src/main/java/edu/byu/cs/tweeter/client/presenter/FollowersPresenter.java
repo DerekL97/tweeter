@@ -5,23 +5,15 @@ import java.util.List;
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
+import edu.byu.cs.tweeter.client.model.service.handler.BackgroundTaskHandler;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class FollowersPresenter {
+public class FollowersPresenter extends FragmentPresenter {
     private View view;
     private UserService userService;
     private FollowService followService;
-
     private User lastFollower;
-
-    public boolean HasMorePages() {
-        return hasMorePages;
-    }
-
     private boolean hasMorePages;
-
-
-
     private boolean isLoading = false;
     private static final int PAGE_SIZE = 10;
 
@@ -32,9 +24,6 @@ public class FollowersPresenter {
         followService = new FollowService();
     }
 
-    public boolean isLoading() {
-        return isLoading;
-    }
 
     public void getUser(String userAlias) {
         userService.getUser(userAlias, Cache.getInstance().getCurrUserAuthToken(), new GetUserObserver());
@@ -55,6 +44,11 @@ public class FollowersPresenter {
         }
     }
 
+    public boolean HasMorePages() {
+        return hasMorePages;
+    }
+
+
     public interface View {
         void displayMessage(String message);
         void setLoadingFooter(boolean value);
@@ -62,7 +56,7 @@ public class FollowersPresenter {
         void addFollowers(List<User> followers);
     }
 
-    private class GetUserObserver implements UserService.GetUserObserver {
+    private class GetUserObserver extends BackgroundTaskHandler implements UserService.GetUserObserver {
 
         @Override
         public void loadUser(User user) {

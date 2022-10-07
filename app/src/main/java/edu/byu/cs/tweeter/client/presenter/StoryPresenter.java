@@ -8,24 +8,17 @@ import java.util.List;
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.service.StatusService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
+import edu.byu.cs.tweeter.client.presenter.observer.ServiceObserver;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class StoryPresenter {
+public class StoryPresenter extends FragmentPresenter {
     private Status lastStatus;
-    private boolean hasMorePages;
-    private boolean isLoading = false;
-
-    private static final int PAGE_SIZE = 10;
-
     private User user;
-
-    private View view;
     private StatusService statusService;
-    private UserService userService;
 
     public StoryPresenter(View view){
-        this.view = view;
+        super(view);
         statusService = new StatusService();
         userService = new UserService();
     }
@@ -45,11 +38,9 @@ public class StoryPresenter {
         }
     }
 
-    public interface View{
-        void startActivity(Intent intent);
+    public interface View extends FragmentPresenter.View{
         void displayMessage(String message);
         void setLoadingFooter(boolean value);
-        void addStatuses(List<Status> Statuses);
         void showUser(User user);
     }
     public void getUser(String userAlias) {
@@ -61,12 +52,7 @@ public class StoryPresenter {
         view.displayMessage("Getting user's profile...");
 //        Toast.makeText(getContext(), "Getting user's profile...", Toast.LENGTH_LONG).show();
     }
-    public boolean hasMorePages() {
-        return hasMorePages;
-    }
-    public boolean isLoading() {
-        return isLoading;
-    }
+
 
     public void loadMoreItems() {
         if (!isLoading) {   // This guard is important for avoiding a race condition in the scrolling code.
@@ -106,7 +92,7 @@ public class StoryPresenter {
 //            removeLoadingFooter();
         }
     }
-    private class GetUserObserver implements UserService.GetUserObserver {
+    private class GetUserObserver extends ServiceObserver implements UserService.GetUserObserver {
 
         @Override
         public void loadUser(User user) {

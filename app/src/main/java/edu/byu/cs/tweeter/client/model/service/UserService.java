@@ -4,7 +4,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.GetUserTask;
-import edu.byu.cs.tweeter.client.model.service.backgroundTask.handler.GetUserHandler;
+import edu.byu.cs.tweeter.client.model.service.handler.GetUserHandler;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
@@ -13,8 +13,8 @@ public class UserService {
     public interface GetUserObserver {
 
         void loadUser(User user);
-        void displayErrorMessage(String message);
-        void displayException(Exception ex);
+        void handleFailure(String message);
+        void handleException(Exception ex);
     }
 
     public void getUser(String userAlias, AuthToken authToken, GetUserObserver getUserObserver){

@@ -14,6 +14,7 @@ import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.LogInOutService;
 import edu.byu.cs.tweeter.client.model.service.StatusService;
+import edu.byu.cs.tweeter.client.presenter.observer.ServiceObserver;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
@@ -69,7 +70,7 @@ public class MainActivityPresenter {
 //            Toast.makeText(MainActivity.this, "Adding " + selectedUser.getName() + "...", Toast.LENGTH_LONG).show();
         }
     }
-    public class startFollowTaskObserver implements FollowService.startFollowTaskObserver{
+    public class startFollowTaskObserver extends ServiceObserver implements FollowService.startFollowTaskObserver { //todo get rid of startFollowTaskObserver
         @Override
         public void FollowReturn() {
             updateSelectedUserFollowingAndFollowers();

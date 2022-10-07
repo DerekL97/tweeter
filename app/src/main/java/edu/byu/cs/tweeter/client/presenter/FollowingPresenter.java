@@ -7,37 +7,22 @@ import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class FollowingPresenter {
-
-    private View view;
-    private static final int PAGE_SIZE = 10;
+public class FollowingPresenter extends FragmentPresenter {
     private FollowService followService;
-    private UserService userService;
     private User lastFollowee;
-    private boolean hasMorePages;
-    private boolean isLoading = false;
-
-    public interface View{
-        void displayMessage(String message);
-        void setLoadingFooter(boolean value);
-        void addFollowees(List<User> followees);
-
-        void showUser(User user);
-    }
-
+    protected FollowingPresenter.View view;
 
     public FollowingPresenter(View view) {
-        this.view = view;
+        super(view);
         followService = new FollowService();
-        userService = new UserService();
     }
 
-    public boolean hasMorePages() {
-        return hasMorePages;
+    public interface View extends FragmentPresenter.View{
+        void addFollowees(List<User> followees);
     }
-    public boolean isLoading() {
-        return isLoading;
-    }
+
+
+
 
     public void loadMoreItems(User user) {
         isLoading = true;
