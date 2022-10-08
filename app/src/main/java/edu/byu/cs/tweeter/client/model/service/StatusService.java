@@ -14,29 +14,23 @@ import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class StatusService {
+public class StatusService extends Service{
 
-    public interface StatusServiceObserver{
+    public interface StatusServiceObserver extends ServiceObserverInterface{
         void addStatuses(List<Status> Statuses, boolean hasMorePages, Status lastStatus);
-        void displayErrorMessage(String message);
-        void displayException(Exception ex);
     }
-
-
-    public void getMoreStatuses(User user, int PAGE_SIZE, Status lastStatus, StatusServiceObserver observer){
-        GetStoryTask getStoryTask = new GetStoryTask(Cache.getInstance().getCurrUserAuthToken(),
+    public void getMoreStatuses(AuthToken authToken, User user, int PAGE_SIZE, Status lastStatus, StatusServiceObserver observer){
+        GetStoryTask getStoryTask = new GetStoryTask(authToken,
                 user, PAGE_SIZE, lastStatus, new GetStoryHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(getStoryTask);
     }
 
-    public interface PostStatusObserver{
-        public void postedStatus();
-        public void displayErrorMessage(String message);
-        public void displayException(Exception ex);
+    public interface PostStatusObserver extends ServiceObserverInterface{
+        void postedStatus();
     }
     public void startStatusTask(AuthToken authToken, Status newStatus, MainActivityPresenter.postStatusObserver observer){
-        PostStatusTask statusTask = new PostStatusTask(Cache.getInstance().getCurrUserAuthToken(),
+        PostStatusTask statusTask = new PostStatusTask(authToken,
                 newStatus, new PostStatusHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(statusTask);

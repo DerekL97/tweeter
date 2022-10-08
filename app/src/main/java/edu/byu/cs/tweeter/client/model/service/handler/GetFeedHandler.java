@@ -4,14 +4,24 @@ import android.os.Bundle;
 
 import java.util.List;
 
+import edu.byu.cs.tweeter.client.model.service.FeedService;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.GetFeedTask;
-import edu.byu.cs.tweeter.client.presenter.observer.ServiceObserver;
+import edu.byu.cs.tweeter.client.presenter.FragmentPresenter;
 import edu.byu.cs.tweeter.model.domain.Status;
 
 public class GetFeedHandler extends BackgroundTaskHandler {
-
-    public GetFeedHandler(ServiceObserver observer) {
+    private FeedService.GetFeedObserver observer;
+    public GetFeedHandler(FeedService.GetFeedObserver observer) {
         super(observer);
+        this.observer = observer;
+    }
+
+    @Override
+    protected void handleSuccessMessage(Bundle data) {
+        List<Status> statuses = (List<Status>) data.getSerializable(GetFeedTask.STATUSES_KEY); //todo fix this
+        boolean hasMorePages = data.getBoolean(GetFeedTask.MORE_PAGES_KEY);
+        Status lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() - 1) : null;
+        observer.addItems(statuses, hasMorePages, lastStatus);
     }
 
 //    @Override
@@ -31,11 +41,6 @@ public class GetFeedHandler extends BackgroundTaskHandler {
 //        }
 //    }
 
-    @Override
-    protected void handleSuccessMessage(ServiceObserver observer, Bundle data) {
-        List<Status> statuses = (List<Status>) msg.getData().getSerializable(GetFeedTask.STATUSES_KEY); //todo fix this
-        boolean hasMorePages = msg.getData().getBoolean(GetFeedTask.MORE_PAGES_KEY);
-        Status lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() - 1) : null;
-        observer.addItems(statuses, hasMorePages, lastStatus);
-    }
+
+
 }

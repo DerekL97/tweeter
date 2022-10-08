@@ -7,10 +7,10 @@ import android.os.Message;
 
 import androidx.annotation.NonNull;
 
-import edu.byu.cs.tweeter.client.presenter.observer.ServiceObserver;
+import edu.byu.cs.tweeter.client.model.service.Service;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.BackgroundTask;
 
-public abstract class BackgroundTaskHandler<T extends ServiceObserver> extends Handler {
+public abstract class BackgroundTaskHandler<T extends Service.ServiceObserverInterface> extends Handler {
 
     private final T observer;
 
@@ -23,7 +23,7 @@ public abstract class BackgroundTaskHandler<T extends ServiceObserver> extends H
     public void handleMessage(@NonNull Message msg) {
         boolean success = msg.getData().getBoolean(BackgroundTask.SUCCESS_KEY);
         if (success) {
-            handleSuccessMessage(observer, msg.getData());
+            handleSuccessMessage(msg.getData());
         } else if (msg.getData().containsKey(BackgroundTask.MESSAGE_KEY)) {
             String message = msg.getData().getString(BackgroundTask.MESSAGE_KEY);
             observer.handleFailure(message);
@@ -33,5 +33,5 @@ public abstract class BackgroundTaskHandler<T extends ServiceObserver> extends H
         }
     }
 
-    protected abstract void handleSuccessMessage(T observer, Bundle data);
+    protected abstract void handleSuccessMessage(Bundle data);
 }

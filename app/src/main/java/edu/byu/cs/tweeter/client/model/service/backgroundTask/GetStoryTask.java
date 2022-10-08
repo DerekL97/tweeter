@@ -13,7 +13,7 @@ import edu.byu.cs.tweeter.util.Pair;
  * Background task that retrieves a page of statuses from a user's story.
  */
 public class GetStoryTask extends PagedStatusTask {
-
+    public static final String STATUSES_KEY = "statuses";
     public GetStoryTask(AuthToken authToken, User targetUser, int limit, Status lastStatus,
                         Handler messageHandler) {
         super(authToken, targetUser, limit, lastStatus, messageHandler);

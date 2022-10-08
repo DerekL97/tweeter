@@ -23,11 +23,13 @@ import edu.byu.cs.tweeter.client.presenter.MainActivityPresenter;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class FollowService {
+public class FollowService extends Service {
 
-
+    public interface startUnfollowTaskObserver extends ServiceObserverInterface { //todo remove interface (replace with extended observer class
+        void UnfollowReturn();
+    }
     public void startUnfollowTask(AuthToken currUserAuthToken, User selectedUser, startUnfollowTaskObserver observer) {
-        UnfollowTask unfollowTask = new UnfollowTask(Cache.getInstance().getCurrUserAuthToken(),
+        UnfollowTask unfollowTask = new UnfollowTask(currUserAuthToken,
                 selectedUser, new UnfollowHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(unfollowTask);
@@ -36,28 +38,19 @@ public class FollowService {
 
 
 
-    public interface startUnfollowTaskObserver{ //todo remove interface (replace with extended observer class
-        void displayErrorMessage(String message);
-        void displayException(Exception ex);
-        void UnfollowReturn();
-    }
 
+    public interface startFollowTaskObserver extends ServiceObserverInterface {
+        void FollowReturn();
+    }
     public void startFollowTask(AuthToken currUserAuthToken, User selectedUser, MainActivityPresenter.startFollowTaskObserver observer) {
-        FollowTask followTask = new FollowTask(Cache.getInstance().getCurrUserAuthToken(),
-                selectedUser, new FollowHandler(observer));
+        FollowTask followTask = new FollowTask(currUserAuthToken, selectedUser, new FollowHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(followTask);
     }
-    public interface startFollowTaskObserver{
-        void displayErrorMessage(String message);
-        void displayException(Exception ex);
-        void FollowReturn();
-    }
 
-    public interface GetFollowingObserver {
+
+    public interface GetFollowingObserver extends ServiceObserverInterface {
         void addFollowees(List<User> followers, boolean hasMorePages);
-        void displayErrorMessage(String message);
-        void displayException(Exception ex);
     }
 
     public void loadMoreFollowingItems(AuthToken currUserAuthToken, User user, int pageSize, User lastFollowee, GetFollowingObserver getFollowingObserver) {
@@ -68,10 +61,8 @@ public class FollowService {
 
     }
 
-    public interface GetFollowersObserver{
+    public interface GetFollowersObserver extends ServiceObserverInterface {
         void addFollowers(boolean hasMorePages, User lastFollower, List<User> followers);
-        void displayErrorMessage(String message);
-        void displayException(Exception ex);
     }
 
     public void loadMoreFollowerItems(User user, int PAGE_SIZE, User lastFollower, GetFollowersObserver observer){
@@ -81,10 +72,8 @@ public class FollowService {
         executor.execute(getFollowersTask);
     }
 
-    public interface IsFollowerHandlerObserver{
+    public interface IsFollowerHandlerObserver extends ServiceObserverInterface {
         void setIsFollower(boolean isFollower);
-        void displayErrorMessage(String message);
-        void displayException(Exception ex);
     }
 
     public void startIsFollowerTask(User selectedUser, AuthToken authToken, User currUser, IsFollowerHandlerObserver observer){
@@ -94,10 +83,8 @@ public class FollowService {
         executor.execute(isFollowerTask);
     }
 
-    public interface GetFollowersCountObserver{
+    public interface GetFollowersCountObserver extends ServiceObserverInterface {
         void returnFollowersCount(int count);
-        void displayErrorMessage(String message);
-        void displayException(Exception ex);
     }
     public void startGetFollowersCount(AuthToken currUserAuthToken, User selectedUser, MainActivityPresenter.GetFollowersCountObserver observer) {
         GetFollowersCountTask followersCountTask = new GetFollowersCountTask(currUserAuthToken,
@@ -106,13 +93,11 @@ public class FollowService {
         executor.execute(followersCountTask);
     }
 
-    public interface GetFollowingCountObserver{
+    public interface GetFollowingCountObserver extends ServiceObserverInterface {
         void returnFollowingCount(int count);
-        void displayErrorMessage(String message);
-        void displayException(Exception ex);
     }
     public void startGetFollowingCount(AuthToken currUserAuthToken, User selectedUser, MainActivityPresenter.GetFollowingCountObserver observer) {
-        GetFollowingCountTask followingCountTask = new GetFollowingCountTask(Cache.getInstance().getCurrUserAuthToken(),
+        GetFollowingCountTask followingCountTask = new GetFollowingCountTask(currUserAuthToken,
                 selectedUser, new GetFollowingCountHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(followingCountTask);

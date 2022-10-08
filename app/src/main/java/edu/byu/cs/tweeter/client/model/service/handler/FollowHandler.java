@@ -2,17 +2,21 @@ package edu.byu.cs.tweeter.client.model.service.handler;
 
 import android.os.Bundle;
 
-import edu.byu.cs.tweeter.client.presenter.observer.ServiceObserver;
+import edu.byu.cs.tweeter.client.model.service.FollowService;
+import edu.byu.cs.tweeter.client.presenter.FragmentPresenter;
 
 public class FollowHandler extends BackgroundTaskHandler {
-
-    public FollowHandler(ServiceObserver observer) {
+    FollowService.startFollowTaskObserver observer;
+    public FollowHandler(FollowService.startFollowTaskObserver observer) {
         super(observer);
+        this.observer = observer;
     }
 
     @Override
-    protected void handleSuccessMessage(ServiceObserver observer, Bundle data) {
+    protected void handleSuccessMessage(Bundle data) {
         observer.FollowReturn();
+//        updateSelectedUserFollowingAndFollowers();
+//        updateFollowButton(false);
     }
 
 //    @Override

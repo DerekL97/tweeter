@@ -1,5 +1,7 @@
 package edu.byu.cs.tweeter.client.presenter;
 
+import androidx.fragment.app.Fragment;
+
 import java.util.List;
 
 import edu.byu.cs.tweeter.client.cache.Cache;
@@ -49,31 +51,17 @@ public class FollowersPresenter extends FragmentPresenter {
     }
 
 
-    public interface View {
-        void displayMessage(String message);
-        void setLoadingFooter(boolean value);
-        void showUser(User user);
+    public interface View extends FragmentPresenter.View{
         void addFollowers(List<User> followers);
     }
 
-    private class GetUserObserver extends BackgroundTaskHandler implements UserService.GetUserObserver {
-
+    private class GetUserObserver extends FragmentPresenter.ServiceObserver implements UserService.GetUserObserver {
         @Override
         public void loadUser(User user) {
             view.showUser(user);
         }
-
-        @Override
-        public void displayErrorMessage(String message) {
-            view.displayMessage("Failed to get user's profile: " + message);
-        }
-
-        @Override
-        public void displayException(Exception ex) {
-            view.displayMessage("Failed to get user's profile because of exception: " + ex.getMessage());
-        }
     }
-    private class GetFollowersObserver implements FollowService.GetFollowersObserver{
+    private class GetFollowersObserver extends FragmentPresenter.ServiceObserver implements FollowService.GetFollowersObserver{
         @Override
         public void addFollowers(boolean hasMorePages, User lastFollower, List<User> followers) {
             FollowersPresenter.this.hasMorePages = hasMorePages;
@@ -83,15 +71,5 @@ public class FollowersPresenter extends FragmentPresenter {
             view.addFollowers(followers);
         }
 
-        @Override
-        public void displayErrorMessage(String message) {
-
-            view.displayMessage("Failed to get followers: " + message);
-        }
-
-        @Override
-        public void displayException(Exception ex) {
-            view.displayMessage("Failed to get followers because of exception: " + ex.getMessage());
-        }
     }
 }

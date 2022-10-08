@@ -5,18 +5,17 @@ import java.util.concurrent.Executors;
 
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.GetUserTask;
 import edu.byu.cs.tweeter.client.model.service.handler.GetUserHandler;
+import edu.byu.cs.tweeter.client.presenter.FeedPresenter;
+import edu.byu.cs.tweeter.client.presenter.FragmentPresenter;
+import edu.byu.cs.tweeter.client.presenter.FragmentPresenter.ServiceObserver;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class UserService {
+public class UserService extends Service {
 
-    public interface GetUserObserver {
-
+    public interface GetUserObserver extends ServiceObserverInterface {
         void loadUser(User user);
-        void handleFailure(String message);
-        void handleException(Exception ex);
     }
-
     public void getUser(String userAlias, AuthToken authToken, GetUserObserver getUserObserver){
         GetUserTask getUserTask = new GetUserTask(authToken,
                 userAlias, new GetUserHandler(getUserObserver));
