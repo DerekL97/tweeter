@@ -12,7 +12,7 @@ import edu.byu.cs.tweeter.client.model.service.backgroundTask.BackgroundTask;
 
 public abstract class BackgroundTaskHandler<T extends Service.ServiceObserverInterface> extends Handler {
 
-    private final T observer;
+    protected final T observer;
 
     public BackgroundTaskHandler(T observer) {
         super(Looper.getMainLooper());

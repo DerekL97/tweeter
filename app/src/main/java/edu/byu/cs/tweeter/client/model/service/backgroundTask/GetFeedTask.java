@@ -13,7 +13,7 @@ import edu.byu.cs.tweeter.util.Pair;
  * Background task that retrieves a page of statuses from a user's feed.
  */
 public class GetFeedTask extends PagedStatusTask {
-    public static final String STATUSES_KEY = "statuses";
+    public static final String STATUSES_KEY = "items";
 
     public GetFeedTask(AuthToken authToken, User targetUser, int limit, Status lastStatus,
                        Handler messageHandler) {

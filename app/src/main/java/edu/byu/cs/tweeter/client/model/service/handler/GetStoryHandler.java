@@ -24,10 +24,10 @@ public class GetStoryHandler extends BackgroundTaskHandler {
     }
     @Override
     protected void handleSuccessMessage(Bundle data) {
-        List<Status> statuses = (List<Status>) data.getSerializable(GetStoryTask.STATUSES_KEY);//todo fix key thing
+        List<Status> statuses = (List<Status>) data.getSerializable(GetStoryTask.STATUSES_KEY);
         boolean hasMorePages = data.getBoolean(GetStoryTask.MORE_PAGES_KEY);
         Status lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() - 1) : null;
-        observer.addStatuses(statuses, hasMorePages, lastStatus);
+        observer.addStatuses(statuses, hasMorePages, lastStatus);   //todo fix never ending feed
     }
 //    @Override
 //    public void handleMessage(@NonNull Message msg) {

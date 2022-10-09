@@ -26,7 +26,7 @@ public class GetFollowersHandler extends BackgroundTaskHandler {
         boolean hasMorePages = data.getBoolean(GetFollowersTask.MORE_PAGES_KEY);
         User lastFollower = (followers.size() > 0) ? followers.get(followers.size() - 1) : null;
         observer.addFollowers(hasMorePages, lastFollower, followers);
-        //                followersRecyclerViewAdapter.addItems(followers);
+        //followersRecyclerViewAdapter.addItems(followers);
 
     }
 

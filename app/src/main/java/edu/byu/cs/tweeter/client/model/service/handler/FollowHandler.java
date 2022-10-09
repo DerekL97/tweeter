@@ -3,7 +3,6 @@ package edu.byu.cs.tweeter.client.model.service.handler;
 import android.os.Bundle;
 
 import edu.byu.cs.tweeter.client.model.service.FollowService;
-import edu.byu.cs.tweeter.client.presenter.FragmentPresenter;
 
 public class FollowHandler extends BackgroundTaskHandler {
     FollowService.startFollowTaskObserver observer;

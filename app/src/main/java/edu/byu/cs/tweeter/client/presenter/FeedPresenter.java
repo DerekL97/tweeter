@@ -11,17 +11,18 @@ import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class FeedPresenter extends FragmentPresenter {
+public class FeedPresenter extends PagedPresenter {
     private View view;
     private FeedService feedService;
     private Status lastStatus;
 
     public FeedPresenter(View view){
         super(view);
+        this.view = view;
         feedService = new FeedService();
     }
 
-    public interface View extends FragmentPresenter.View{
+    public interface View extends PagedPresenter.View{
         void startActivity(Intent intent);
         void addItems(List<Status> statuses);
     }
@@ -50,7 +51,7 @@ public class FeedPresenter extends FragmentPresenter {
     }
     //End Methods called by the view
 
-    private class GetFeedObserver extends FragmentPresenter.ServiceObserver implements FeedService.GetFeedObserver {//todo get rid of implements
+    private class GetFeedObserver extends Presenter.ServiceObserver implements FeedService.GetFeedObserver {//todo get rid of implements
         //methods from FeedService implementation
         @Override
         public void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus) {
@@ -64,7 +65,7 @@ public class FeedPresenter extends FragmentPresenter {
 
     }
 
-    private class GetUserObserver extends FragmentPresenter.ServiceObserver implements UserService.GetUserObserver{
+    private class GetUserObserver extends Presenter.ServiceObserver implements UserService.GetUserObserver{
 
 //        @Override
         public void loadUser(User user) {

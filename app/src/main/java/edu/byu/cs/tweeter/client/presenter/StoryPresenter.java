@@ -11,15 +11,22 @@ import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class StoryPresenter extends FragmentPresenter {
+public class StoryPresenter extends PagedPresenter {
+    private View view;
     private Status lastStatus;
     private User user;
     private StatusService statusService;
 
     public StoryPresenter(View view){
         super(view);
+        this.view = view;
         statusService = new StatusService();
         userService = new UserService();
+    }
+
+    public interface View extends PagedPresenter.View{
+        void startActivity(Intent intent);
+        void addStatuses(List<Status> followees);
     }
 
     public void mentionClick(String userAlias) {
@@ -46,7 +53,7 @@ public class StoryPresenter extends FragmentPresenter {
         }
     }
 
-    private class StatusServiceObserver extends FragmentPresenter.ServiceObserver implements StatusService.StatusServiceObserver{
+    private class StatusServiceObserver extends Presenter.ServiceObserver implements StatusService.StatusServiceObserver{
 
         @Override
         public void addStatuses(List<Status> Statuses, boolean hasMorePages, Status lastStatus) {
@@ -59,18 +66,18 @@ public class StoryPresenter extends FragmentPresenter {
 //            lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() - 1) : null;
             view.addStatuses(Statuses);
         }
-
-        @Override
-        public void displayErrorMessage(String message) {
-            isLoading = false;
-            view.setLoadingFooter(false);
-        }
-
-        @Override
-        public void displayException(Exception ex) {
-            isLoading = false;
-            view.setLoadingFooter(false);
-        }
+//
+//        @Override
+//        public void displayErrorMessage(String message) {
+//            isLoading = false;
+//            view.setLoadingFooter(false);
+//        }
+//
+//        @Override
+//        public void displayException(Exception ex) {
+//            isLoading = false;
+//            view.setLoadingFooter(false);
+//        }
     }
     private class GetUserObserver extends ServiceObserver implements UserService.GetUserObserver {
         @Override

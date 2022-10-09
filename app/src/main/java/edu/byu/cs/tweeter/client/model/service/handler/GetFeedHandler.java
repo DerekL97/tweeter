@@ -6,14 +6,11 @@ import java.util.List;
 
 import edu.byu.cs.tweeter.client.model.service.FeedService;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.GetFeedTask;
-import edu.byu.cs.tweeter.client.presenter.FragmentPresenter;
 import edu.byu.cs.tweeter.model.domain.Status;
 
-public class GetFeedHandler extends BackgroundTaskHandler {
-    private FeedService.GetFeedObserver observer;
+public class GetFeedHandler extends BackgroundTaskHandler<FeedService.GetFeedObserver> {
     public GetFeedHandler(FeedService.GetFeedObserver observer) {
         super(observer);
-        this.observer = observer;
     }
 
     @Override
