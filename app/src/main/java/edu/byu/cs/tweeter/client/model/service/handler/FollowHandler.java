@@ -13,7 +13,7 @@ public class FollowHandler extends BackgroundTaskHandler {
 
     @Override
     protected void handleSuccessMessage(Bundle data) {
-        observer.FollowReturn();
+        observer.FollowReturn((Boolean) data.get("success"));
 //        updateSelectedUserFollowingAndFollowers();
 //        updateFollowButton(false);
     }

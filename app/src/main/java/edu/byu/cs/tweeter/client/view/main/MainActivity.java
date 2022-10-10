@@ -19,11 +19,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.squareup.picasso.Picasso;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 import edu.byu.cs.client.R;
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.presenter.MainActivityPresenter;
@@ -138,9 +133,9 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         }
 
         @Override
-        public void updateFollowButton(boolean removed) {
+        public void updateFollowButton(boolean isFollower) {
             // If follow relationship was removed.
-            if (removed) {
+            if (!isFollower) {
                 followButton.setText(R.string.Follow);
                 followButton.setBackgroundColor(getResources().getColor(R.color.colorAccent));
             } else {
@@ -209,16 +204,16 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
 //        return statusFormat.format(userFormat.parse(LocalDate.now().toString() + " " + LocalTime.now().toString().substring(0, 8)));
 //    }
 
-    public void updateFollowButton(boolean removed) {//todo remove and replace with mine
-        // If follow relationship was removed.
-        if (removed) {
-            followButton.setText(R.string.Follow);
-            followButton.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        } else {
-            followButton.setText(R.string.Following);
-            followButton.setBackgroundColor(getResources().getColor(R.color.white));
-            followButton.setTextColor(getResources().getColor(R.color.lightGray));
-        }
-    }
+//    public void updateFollowButton(boolean removed) {//todo remove and replace with mine
+//        // If follow relationship was removed.
+//        if (removed) {
+//            followButton.setText(R.string.Follow);
+//            followButton.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+//        } else {
+//            followButton.setText(R.string.Following);
+//            followButton.setBackgroundColor(getResources().getColor(R.color.white));
+//            followButton.setTextColor(getResources().getColor(R.color.lightGray));
+//        }
+//    }
 
 }

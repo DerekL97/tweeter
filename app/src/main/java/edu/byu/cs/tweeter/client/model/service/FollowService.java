@@ -31,8 +31,9 @@ public class FollowService extends Service {
     public void startUnfollowTask(AuthToken currUserAuthToken, User selectedUser, startUnfollowTaskObserver observer) {
         UnfollowTask unfollowTask = new UnfollowTask(currUserAuthToken,
                 selectedUser, new UnfollowHandler(observer));
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(unfollowTask);
+        startTask(unfollowTask);
+//        ExecutorService executor = Executors.newSingleThreadExecutor();
+//        executor.execute(unfollowTask);
     }
 
 
@@ -40,7 +41,7 @@ public class FollowService extends Service {
 
 
     public interface startFollowTaskObserver extends ServiceObserverInterface {
-        void FollowReturn();
+        void FollowReturn(Boolean removed);
     }
     public void startFollowTask(AuthToken currUserAuthToken, User selectedUser, MainActivityPresenter.startFollowTaskObserver observer) {
         FollowTask followTask = new FollowTask(currUserAuthToken, selectedUser, new FollowHandler(observer));

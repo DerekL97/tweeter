@@ -56,37 +56,32 @@ public class MainActivityPresenter extends Presenter {
             view.displayMessage("Removing " + selectedUser.getName() + "...");
         } else {
             followService.startFollowTask(Cache.getInstance().getCurrUserAuthToken(), selectedUser, new startFollowTaskObserver());
-//            FollowTask followTask = new FollowTask(Cache.getInstance().getCurrUserAuthToken(),
-//                    selectedUser, new MainActivity.FollowHandler());
-//            ExecutorService executor = Executors.newSingleThreadExecutor();
-//            executor.execute(followTask);
-
             view.displayMessage("Adding " + selectedUser.getName() + "...");
 //            Toast.makeText(MainActivity.this, "Adding " + selectedUser.getName() + "...", Toast.LENGTH_LONG).show();
         }
     }
     public class startFollowTaskObserver extends Presenter.ServiceObserver implements FollowService.startFollowTaskObserver {
         @Override
-        public void FollowReturn() {
+        public void FollowReturn(Boolean removed) {
             updateSelectedUserFollowingAndFollowers();
-            view.updateFollowButton(false);
+            view.updateFollowButton(removed);
 //            updateFollowButton(false);
-            view.followingButtonSetEnable(true);
+            view.followingButtonSetEnable(removed);
 //            followButton.setEnabled(true);
         }
-        @Override
-        public void handleFailure(String message) {
-            view.displayMessage("Failed to follow: " + message);
-            view.followingButtonSetEnable(true);
-//            followButton.setEnabled(true);
-        }
-
-        @Override
-        public void handleException(Exception ex) {
-            view.displayMessage("Failed to follow because of exception: " + ex.getMessage());
-            view.followingButtonSetEnable(true);
-//            followButton.setEnabled(true);
-        }
+//        @Override
+//        public void handleFailure(String message) {
+//            view.displayMessage("Failed to follow: " + message);
+//            view.followingButtonSetEnable(true);
+////            followButton.setEnabled(true);
+//        }
+//
+//        @Override
+//        public void handleException(Exception ex) {
+//            view.displayMessage("Failed to follow because of exception: " + ex.getMessage());
+//            view.followingButtonSetEnable(true);
+////            followButton.setEnabled(true);
+//        }
     }
     private class startUnfollowTaskObserver extends Presenter.ServiceObserver implements FollowService.startUnfollowTaskObserver{
 

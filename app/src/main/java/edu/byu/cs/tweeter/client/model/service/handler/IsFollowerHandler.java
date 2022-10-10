@@ -20,7 +20,6 @@ public class IsFollowerHandler extends BackgroundTaskHandler {
     @Override
     protected void handleSuccessMessage(Bundle data) {
         boolean isFollower = data.getBoolean(IsFollowerTask.IS_FOLLOWER_KEY);
-
         // If logged in user if a follower of the selected user, display the follow button as "following"
         observer.setIsFollower(isFollower);
 
