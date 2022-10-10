@@ -7,13 +7,13 @@ import java.util.List;
 
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.service.StatusService;
-import edu.byu.cs.tweeter.client.model.service.UserService;
+import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class StoryPresenter extends PagedPresenter {
+public class StoryPresenter extends PagedPresenter<Status> {
     private View view;
-    private Status lastStatus;
+//    private Status lastStatus;
     private User user;
     private StatusService statusService;
 
@@ -21,7 +21,6 @@ public class StoryPresenter extends PagedPresenter {
         super(view);
         this.view = view;
         statusService = new StatusService();
-        userService = new UserService();
     }
 
     public interface View extends PagedPresenter.View{
@@ -29,29 +28,30 @@ public class StoryPresenter extends PagedPresenter {
         void addStatuses(List<Status> followees);
     }
 
+    @Override
+    public void getItems(AuthToken authToken, User user, int PAGE_SIZE, Status lastItem) {
+        statusService.getMoreStatuses(Cache.getInstance().getCurrUserAuthToken(), user, PAGE_SIZE, lastItem, new StatusServiceObserver());
+    }
+
     public void mentionClick(String userAlias) {
         if (userAlias.contains("http")) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(userAlias));
             view.startActivity(intent);
         } else {
-            userService.getUser(userAlias, Cache.getInstance().getCurrUserAuthToken(), new GetUserObserver());
-            view.displayMessage("Getting user's profile...");
+            getUser(userAlias);
+//            userService.getUser(userAlias, Cache.getInstance().getCurrUserAuthToken(), new GetUserObserver());
+//            view.displayMessage("Getting user's profile...");
         }
     }
 
-    public void getUser(String userAlias) {
-        userService.getUser(userAlias, Cache.getInstance().getCurrUserAuthToken(), new GetUserObserver());
-        view.displayMessage("Getting user's profile...");
-    }
 
-
-    public void loadMoreItems() {
-        if (!isLoading) {   // This guard is important for avoiding a race condition in the scrolling code.
-            isLoading = true;
-            view.setLoadingFooter(true);
-            statusService.getMoreStatuses(Cache.getInstance().getCurrUserAuthToken(), user, PAGE_SIZE, lastStatus, new StatusServiceObserver());
-        }
-    }
+//    public void loadMoreItems() {
+//        if (!isLoading) {   // This guard is important for avoiding a race condition in the scrolling code.
+//            isLoading = true;
+//            view.setLoadingFooter(true);
+//            statusService.getMoreStatuses(Cache.getInstance().getCurrUserAuthToken(), user, PAGE_SIZE, lastStatus, new StatusServiceObserver());
+//        }
+//    }
 
     private class StatusServiceObserver extends Presenter.ServiceObserver implements StatusService.StatusServiceObserver{
 
@@ -62,27 +62,16 @@ public class StoryPresenter extends PagedPresenter {
 //            removeLoadingFooter();
             StoryPresenter.this.hasMorePages = hasMorePages;
 //            hasMorePages = msg.getData().getBoolean(GetStoryTask.MORE_PAGES_KEY);
-            StoryPresenter.this.lastStatus = lastStatus;
+            StoryPresenter.this.lastItem = lastStatus;
 //            lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() - 1) : null;
             view.addStatuses(Statuses);
         }
-//
-//        @Override
-//        public void displayErrorMessage(String message) {
-//            isLoading = false;
-//            view.setLoadingFooter(false);
-//        }
-//
-//        @Override
-//        public void displayException(Exception ex) {
-//            isLoading = false;
-//            view.setLoadingFooter(false);
-//        }
+
     }
-    private class GetUserObserver extends ServiceObserver implements UserService.GetUserObserver {
-        @Override
-        public void loadUser(User user) {
-            view.showUser(user);
-        }
-    }
+//    private class GetUserObserver extends ServiceObserver implements UserService.GetUserObserver {
+//        @Override
+//        public void loadUser(User user) {
+//            view.showUser(user);
+//        }
+//    }
 }

@@ -395,7 +395,7 @@ public class FollowersFragment extends Fragment implements FollowersPresenter.Vi
             int totalItemCount = layoutManager.getItemCount();
             int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
 
-            if (!presenter.isLoading() && presenter.HasMorePages()) {
+            if (!presenter.isLoading() && presenter.hasMorePages()) {
                 if ((visibleItemCount + firstVisibleItemPosition) >=
                         totalItemCount && firstVisibleItemPosition >= 0) {
                     // Run this code later on the UI thread

@@ -44,8 +44,9 @@ public class FollowService extends Service {
     }
     public void startFollowTask(AuthToken currUserAuthToken, User selectedUser, MainActivityPresenter.startFollowTaskObserver observer) {
         FollowTask followTask = new FollowTask(currUserAuthToken, selectedUser, new FollowHandler(observer));
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(followTask);
+        startTask(followTask);
+//        ExecutorService executor = Executors.newSingleThreadExecutor();
+//        executor.execute(followTask);
     }
 
 
@@ -58,15 +59,14 @@ public class FollowService extends Service {
                 user, pageSize, lastFollowee, new GetFollowingHandler(getFollowingObserver));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(getFollowingTask);
-
     }
 
     public interface GetFollowersObserver extends ServiceObserverInterface {
         void addFollowers(boolean hasMorePages, User lastFollower, List<User> followers);
     }
 
-    public void loadMoreFollowerItems(User user, int PAGE_SIZE, User lastFollower, GetFollowersObserver observer){
-        GetFollowersTask getFollowersTask = new GetFollowersTask(Cache.getInstance().getCurrUserAuthToken(),
+    public void loadMoreFollowerItems(AuthToken authToken, User user, int PAGE_SIZE, User lastFollower, GetFollowersObserver observer){
+        GetFollowersTask getFollowersTask = new GetFollowersTask(authToken,
                 user, PAGE_SIZE, lastFollower, new GetFollowersHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(getFollowersTask);
@@ -76,7 +76,7 @@ public class FollowService extends Service {
         void setIsFollower(boolean isFollower);
     }
 
-    public void startIsFollowerTask(User selectedUser, AuthToken authToken, User currUser, IsFollowerHandlerObserver observer){
+    public void startIsFollowerTask(AuthToken authToken, User selectedUser, User currUser, IsFollowerHandlerObserver observer){
         IsFollowerTask isFollowerTask = new IsFollowerTask(authToken,
                 currUser, selectedUser, new IsFollowerHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();

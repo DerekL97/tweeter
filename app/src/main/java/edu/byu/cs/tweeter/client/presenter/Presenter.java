@@ -1,20 +1,10 @@
 package edu.byu.cs.tweeter.client.presenter;
 
-import edu.byu.cs.tweeter.client.model.service.FollowService;
-import edu.byu.cs.tweeter.client.model.service.LogInOutService;
 import edu.byu.cs.tweeter.client.model.service.Service;
-import edu.byu.cs.tweeter.client.model.service.StatusService;
-import edu.byu.cs.tweeter.client.model.service.UserService;
-import edu.byu.cs.tweeter.model.domain.User;
 
 public class Presenter {
 
-    private View view;
-//    protected UserService userService;
-//    protected static final int PAGE_SIZE = 10;
-//    protected boolean hasMorePages;
-//    protected boolean isLoading = false;
-
+    protected View view;
 
     public Presenter(Presenter.View view){
         this.view = view;

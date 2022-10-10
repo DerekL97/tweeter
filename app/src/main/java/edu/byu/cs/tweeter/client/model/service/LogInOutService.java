@@ -9,12 +9,12 @@ import edu.byu.cs.tweeter.client.model.service.handler.LogoutHandler;
 import edu.byu.cs.tweeter.client.presenter.MainActivityPresenter;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 
-public class LogInOutService {
+public class LogInOutService extends Service {
 
-    public interface LogoutHandlerObserver{
+    public interface LogoutHandlerObserver extends Service.ServiceObserverInterface{
         void logOutSuccess();
-        void displayErrorMessage(String message);
-        void displayException(Exception ex);
+//        void displayErrorMessage(String message);
+//        void displayException(Exception ex);
     }
     public void StartLogoutTask(AuthToken currUserAuthToken, MainActivityPresenter.LogoutHandlerObserver observer) {
         LogoutTask logoutTask = new LogoutTask(Cache.getInstance().getCurrUserAuthToken(), new LogoutHandler(observer));

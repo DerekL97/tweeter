@@ -20,7 +20,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public class MainActivityPresenter extends Presenter {
 
-    private User selectedUser;//todo initialize
+    private User selectedUser;
     private View view;
     private FollowService followService;
     private LogInOutService logInOutService;
@@ -116,7 +116,7 @@ public class MainActivityPresenter extends Presenter {
 
 
     public void startIsFollowerTask(User selectedUser) {
-        followService.startIsFollowerTask(selectedUser, Cache.getInstance().getCurrUserAuthToken(),
+        followService.startIsFollowerTask(Cache.getInstance().getCurrUserAuthToken(), selectedUser,
                 Cache.getInstance().getCurrUser(), new IsFollowerHandlerObserver());
     }
 
@@ -208,15 +208,15 @@ public class MainActivityPresenter extends Presenter {
 //            logoutUser();
         }
 
-        @Override
-        public void displayErrorMessage(String message) {
-            view.displayMessage("Failed to logout: " + message);
-        }
-
-        @Override
-        public void displayException(Exception ex) {
-            view.displayMessage("Failed to logout because of exception: " + ex.getMessage());
-        }
+//        @Override
+//        public void displayErrorMessage(String message) {
+//            view.displayMessage("Failed to logout: " + message);
+//        }
+//
+//        @Override
+//        public void displayException(Exception ex) {
+//            view.displayMessage("Failed to logout because of exception: " + ex.getMessage());
+//        }
     }
     public void postStatus(String post) throws ParseException {
         Status newStatus = new Status(post, Cache.getInstance().getCurrUser(), getFormattedDateTime(), parseURLs(post), parseMentions(post));

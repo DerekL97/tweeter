@@ -356,7 +356,7 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
          * data.
          */
         void loadMoreItems() {
-            presenter.loadMoreItems();
+            presenter.loadMoreItems(user);
 //            if (!presenter.isLoading()) {   // This guard is important for avoiding a race condition in the scrolling code.
 //                isLoading = true;
 //                addLoadingFooter();
