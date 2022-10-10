@@ -303,17 +303,8 @@ public class FollowersFragment extends Fragment implements FollowersPresenter.Vi
          * Causes the Adapter to display a loading footer and make a request to get more following
          * data.
          */
-        void loadMoreItems() { //todo redo this one
+        void loadMoreItems() {
             presenter.loadMoreItems(user);
-//            if (!isLoading) {   // This guard is important for avoiding a race condition in the scrolling code.
-//                isLoading = true;
-//                addLoadingFooter();
-//
-//                GetFollowersTask getFollowersTask = new GetFollowersTask(Cache.getInstance().getCurrUserAuthToken(),
-//                        user, PAGE_SIZE, lastFollower, new GetFollowersHandler());
-//                ExecutorService executor = Executors.newSingleThreadExecutor();
-//                executor.execute(getFollowersTask);
-//            }
         }
 
         /**

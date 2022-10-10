@@ -15,7 +15,7 @@ public class GetFeedHandler extends BackgroundTaskHandler<FeedService.GetFeedObs
 
     @Override
     protected void handleSuccessMessage(Bundle data) {
-        List<Status> statuses = (List<Status>) data.getSerializable(GetFeedTask.STATUSES_KEY); //todo fix this
+        List<Status> statuses = (List<Status>) data.getSerializable(GetFeedTask.STATUSES_KEY);
         boolean hasMorePages = data.getBoolean(GetFeedTask.MORE_PAGES_KEY);
         Status lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() - 1) : null;
         observer.addItems(statuses, hasMorePages, lastStatus);
@@ -25,7 +25,7 @@ public class GetFeedHandler extends BackgroundTaskHandler<FeedService.GetFeedObs
 //    public void handleMessage(@NonNull Message msg) {
 //        boolean success = msg.getData().getBoolean(GetFeedTask.SUCCESS_KEY);
 //        if (success) {
-//            List<Status> statuses = (List<Status>) msg.getData().getSerializable(GetFeedTask.STATUSES_KEY); //todo fix this
+//            List<Status> statuses = (List<Status>) msg.getData().getSerializable(GetFeedTask.STATUSES_KEY);
 //            boolean hasMorePages = msg.getData().getBoolean(GetFeedTask.MORE_PAGES_KEY);
 //            Status lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() - 1) : null;
 //            observer.addItems(statuses, hasMorePages, lastStatus);

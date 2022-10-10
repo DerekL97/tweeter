@@ -24,7 +24,7 @@ public class GetFollowingHandler extends BackgroundTaskHandler {
     }
     @Override
     protected void handleSuccessMessage(Bundle data) {
-        List<User> followees = (List<User>) data.getSerializable(GetFollowingTask.FOLLOWEES_KEY);//todo find this key
+        List<User> followees = (List<User>) data.getSerializable(GetFollowingTask.FOLLOWEES_KEY);
         boolean hasMorePages = data.getBoolean(GetFollowingTask.MORE_PAGES_KEY);
         observer.addFollowees(followees, hasMorePages);
     }

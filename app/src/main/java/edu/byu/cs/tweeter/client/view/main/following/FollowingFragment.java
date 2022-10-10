@@ -68,7 +68,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_following, container, false);
 
-        user = (User) getArguments().getSerializable(USER_KEY); //Todo check for null pointer exception
+        user = (User) getArguments().getSerializable(USER_KEY);
 
         RecyclerView followingRecyclerView = view.findViewById(R.id.followingRecyclerView);
 

@@ -65,7 +65,7 @@ public class MainActivityPresenter extends Presenter {
 //            Toast.makeText(MainActivity.this, "Adding " + selectedUser.getName() + "...", Toast.LENGTH_LONG).show();
         }
     }
-    public class startFollowTaskObserver extends Presenter.ServiceObserver implements FollowService.startFollowTaskObserver { //todo get rid of startFollowTaskObserver
+    public class startFollowTaskObserver extends Presenter.ServiceObserver implements FollowService.startFollowTaskObserver {
         @Override
         public void FollowReturn() {
             updateSelectedUserFollowingAndFollowers();

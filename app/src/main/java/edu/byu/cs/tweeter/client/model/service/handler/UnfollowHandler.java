@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.UnfollowTask;
 
-public class UnfollowHandler extends BackgroundTaskHandler {//todo move this
+public class UnfollowHandler extends BackgroundTaskHandler {
     private FollowService.startUnfollowTaskObserver observer;
 
     public UnfollowHandler(FollowService.startUnfollowTaskObserver observer) {

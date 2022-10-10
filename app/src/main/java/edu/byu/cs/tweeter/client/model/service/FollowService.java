@@ -25,7 +25,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public class FollowService extends Service {
 
-    public interface startUnfollowTaskObserver extends ServiceObserverInterface { //todo remove interface (replace with extended observer class
+    public interface startUnfollowTaskObserver extends ServiceObserverInterface {
         void UnfollowReturn();
     }
     public void startUnfollowTask(AuthToken currUserAuthToken, User selectedUser, startUnfollowTaskObserver observer) {

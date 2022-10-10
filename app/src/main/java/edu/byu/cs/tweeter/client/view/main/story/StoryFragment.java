@@ -179,7 +179,7 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
             for (String mention : status.getMentions()) {
                 ClickableSpan span = new ClickableSpan() {
                     @Override
-                    public void onClick(@NonNull View widget) {//todo refactor
+                    public void onClick(@NonNull View widget) {
                         TextView clickedMention = (TextView) widget;
                         Spanned s = (Spanned) clickedMention.getText();
                         int start = s.getSpanStart(this);
@@ -188,17 +188,6 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
                         String clickable = s.subSequence(start, end).toString();
 
                         presenter.mentionClick(clickable);
-
-//                        if (clickable.contains("http")) {
-//                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(clickable));
-//                            startActivity(intent);
-//                        } else {
-//                            GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
-//                                    clickable, new GetUserHandler());
-//                            ExecutorService executor = Executors.newSingleThreadExecutor();
-//                            executor.execute(getUserTask);
-//                            Toast.makeText(getContext(), "Getting user's profile...", Toast.LENGTH_LONG).show();
-//                        }
                     }
 
                     @Override
@@ -226,7 +215,7 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
         /**
          * Message handler (i.e., observer) for GetUserTask.
          */
-//        private class GetUserHandler extends Handler {  //todo move class
+//        private class GetUserHandler extends Handler {
 //            @Override
 //            public void handleMessage(@NonNull Message msg) {
 //                boolean success = msg.getData().getBoolean(GetUserTask.SUCCESS_KEY);

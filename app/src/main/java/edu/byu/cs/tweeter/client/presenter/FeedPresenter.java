@@ -56,7 +56,7 @@ public class FeedPresenter extends PagedPresenter<Status> {
 //    }
     //End Methods called by the view
 
-    private class GetFeedObserver extends Presenter.ServiceObserver implements FeedService.GetFeedObserver {//todo get rid of implements
+    private class GetFeedObserver extends Presenter.ServiceObserver implements FeedService.GetFeedObserver {
         //methods from FeedService implementation
         @Override
         public void addItems(List<Status> statuses, boolean hasMorePages, Status lastStatus) {

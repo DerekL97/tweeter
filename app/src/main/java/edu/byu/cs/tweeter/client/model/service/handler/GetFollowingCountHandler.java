@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.GetFollowingCountTask;
 
-public class GetFollowingCountHandler extends BackgroundTaskHandler {//todo move this
+public class GetFollowingCountHandler extends BackgroundTaskHandler {
     private FollowService.GetFollowingCountObserver observer;
 
     public GetFollowingCountHandler(FollowService.GetFollowingCountObserver observer) {

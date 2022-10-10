@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import edu.byu.cs.tweeter.client.model.service.StatusService;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.PostStatusTask;
 
-public class PostStatusHandler extends BackgroundTaskHandler {//todo move this
+public class PostStatusHandler extends BackgroundTaskHandler {
     private StatusService.PostStatusObserver observer;
 
     public PostStatusHandler(StatusService.PostStatusObserver observer) {

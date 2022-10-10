@@ -10,7 +10,7 @@ import edu.byu.cs.tweeter.client.model.service.LogInOutService;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.BackgroundTask;
 import edu.byu.cs.tweeter.client.model.service.backgroundTask.LogoutTask;
 
-public class LogoutHandler extends BackgroundTaskHandler {//todo move this
+public class LogoutHandler extends BackgroundTaskHandler {
     private LogInOutService.LogoutHandlerObserver observer;
 
     public LogoutHandler(LogInOutService.LogoutHandlerObserver observer) {

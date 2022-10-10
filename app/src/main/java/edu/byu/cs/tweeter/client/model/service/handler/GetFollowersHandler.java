@@ -22,7 +22,7 @@ public class GetFollowersHandler extends BackgroundTaskHandler {
 
     @Override
     protected void handleSuccessMessage(Bundle data) {
-        List<User> followers = (List<User>) data.getSerializable(GetFollowersTask.FOLLOWERS_KEY);//todo find this key
+        List<User> followers = (List<User>) data.getSerializable(GetFollowersTask.FOLLOWERS_KEY);
         boolean hasMorePages = data.getBoolean(GetFollowersTask.MORE_PAGES_KEY);
         User lastFollower = (followers.size() > 0) ? followers.get(followers.size() - 1) : null;
         observer.addFollowers(hasMorePages, lastFollower, followers);
