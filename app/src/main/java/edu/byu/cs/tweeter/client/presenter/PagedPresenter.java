@@ -12,7 +12,7 @@ public abstract class PagedPresenter<T> extends Presenter{
     protected static final int PAGE_SIZE = 10;
     protected boolean hasMorePages;
     protected boolean isLoading = false;
-    protected T lastItem;
+    protected T lastItem = null;
 //    protected boolean isGettingUser;//todo what is this for?
     protected LoadService extraService;
 

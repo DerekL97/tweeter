@@ -22,8 +22,9 @@ public class StatusService extends Service{
     public void getMoreStatuses(AuthToken authToken, User user, int PAGE_SIZE, Status lastStatus, StatusServiceObserver observer){
         GetStoryTask getStoryTask = new GetStoryTask(authToken,
                 user, PAGE_SIZE, lastStatus, new GetStoryHandler(observer));
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(getStoryTask);
+        startTask(getStoryTask);
+//        ExecutorService executor = Executors.newSingleThreadExecutor();
+//        executor.execute(getStoryTask);
     }
 
     public interface PostStatusObserver extends ServiceObserverInterface{
