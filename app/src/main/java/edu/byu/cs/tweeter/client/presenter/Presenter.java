@@ -21,14 +21,14 @@ public class Presenter {
         public void handleFailure(String message) {
 //            isLoading = false;
 //            view.setLoadingFooter(false);
-//            view.displayMessage("Failed to get feed: " + message);
+            view.displayMessage("Failed to post status: " + message);
         }
 
 //        @Override
         public void handleException(Exception ex) {
 //            isLoading = false;
 //            view.setLoadingFooter(false);
-//            view.displayMessage("Failed to get feed because of exception: " + ex.getMessage());
+            view.displayMessage("Failed to post status because of exception: " + ex.getMessage());
         }
     }
 }

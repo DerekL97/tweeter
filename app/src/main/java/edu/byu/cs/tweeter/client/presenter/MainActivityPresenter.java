@@ -25,6 +25,7 @@ public class MainActivityPresenter extends Presenter {
     private FollowService followService;
     private LogInOutService logInOutService;
     private StatusService statusService;
+    private postStatusObserver postStatusObserver;
 
     public MainActivityPresenter(View view, User selectedUser){
         super(view);
@@ -32,9 +33,15 @@ public class MainActivityPresenter extends Presenter {
         followService = new FollowService();
         this.selectedUser = selectedUser;
         this.logInOutService = new LogInOutService();
-        this.statusService = new StatusService();
+        this.statusService = getStatusService();
     }
 
+    protected StatusService getStatusService() {
+        if (statusService == null){
+            statusService = new StatusService();
+        }
+        return statusService;
+    }
 
 
     public interface View extends Presenter.View {
@@ -202,44 +209,27 @@ public class MainActivityPresenter extends Presenter {
 //            logOutToast.cancel();
 //            logoutUser();
         }
-
-//        @Override
-//        public void displayErrorMessage(String message) {
-//            view.displayMessage("Failed to logout: " + message);
-//        }
-//
-//        @Override
-//        public void displayException(Exception ex) {
-//            view.displayMessage("Failed to logout because of exception: " + ex.getMessage());
-//        }
     }
     public void postStatus(String post) throws ParseException {
-        Status newStatus = new Status(post, Cache.getInstance().getCurrUser(), getFormattedDateTime(), parseURLs(post), parseMentions(post));
+        Status newStatus = new Status(post, Cache.getInstance().getCurrUser(), getFormattedDateTime(),
+                parseURLs(post), parseMentions(post));
 
-        statusService.startStatusTask(Cache.getInstance().getCurrUserAuthToken(), newStatus, new postStatusObserver());
-//        PostStatusTask statusTask = new PostStatusTask(Cache.getInstance().getCurrUserAuthToken(),
-//                newStatus, new MainActivity.PostStatusHandler());
-//        ExecutorService executor = Executors.newSingleThreadExecutor();
-//        executor.execute(statusTask);
+        getStatusService().startStatusTask(Cache.getInstance().getCurrUserAuthToken(), newStatus,
+                getPostStatusObserver());
+    }
+    protected postStatusObserver getPostStatusObserver(){
+        if(postStatusObserver == null){
+            postStatusObserver = new postStatusObserver();
+        }
+        return postStatusObserver;
     }
     public class postStatusObserver extends Presenter.ServiceObserver implements StatusService.PostStatusObserver{
-
         @Override
         public void postedStatus() {
             view.postedStatus();
 //            postingToast.cancel();
 //            Toast.makeText(MainActivity.this, "Successfully Posted!", Toast.LENGTH_LONG).show();
         }
-
-//        @Override
-//        public void displayErrorMessage(String message) {
-//            view.displayMessage("Failed to post status: " + message);
-//        }
-//
-//        @Override
-//        public void displayException(Exception ex) {
-//            view.displayMessage("Failed to post status because of exception: " + ex.getMessage());
-//        }
     }
 
 
