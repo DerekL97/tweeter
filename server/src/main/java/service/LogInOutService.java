@@ -7,7 +7,6 @@ import net.response.Response;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.util.FakeData;
-import edu.byu.cs.tweeter.util.Pair;
 
 public class LogInOutService extends Service{
     public static RegisterResponse registerNewUser(RegisterRequest input) {

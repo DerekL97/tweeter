@@ -5,13 +5,8 @@ package lambda;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 
-import net.TweeterRemoteException;
 import net.request.FollowRequest;
-import net.request.FollowingRequest;
-import net.response.FollowingResponse;
 import net.response.Response;
-
-import java.util.ArrayList;
 
 import service.FollowService;
 

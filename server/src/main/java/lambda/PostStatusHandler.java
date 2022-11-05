@@ -4,7 +4,6 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 
 import net.request.PostStatusRequest;
-import net.response.RegisterResponse;
 import net.response.Response;
 
 import service.StatusService;

@@ -4,7 +4,6 @@ import net.request.GetUserRequest;
 import net.request.LoginRequest;
 import net.response.GetUserResponse;
 import net.response.LoginResponse;
-import net.response.Response;
 
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
