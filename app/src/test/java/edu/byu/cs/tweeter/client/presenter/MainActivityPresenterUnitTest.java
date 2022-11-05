@@ -108,12 +108,12 @@ public class MainActivityPresenterUnitTest {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
                 MainActivityPresenter.postStatusObserver observer = invocation.getArgument(2, MainActivityPresenter.postStatusObserver.class);
-                try {
-                    throw new Exception("<EXCEPTION MESSAGE>");
-                }
-                catch (Exception e) {
-                    observer.handleException(e);
-                }
+//                try {
+//                    throw new Exception("<EXCEPTION MESSAGE>");
+//                }
+//                catch (Exception e) {
+                observer.handleException(new Exception("<EXCEPTION MESSAGE>"));
+//                }
                 return null;
             }
         };

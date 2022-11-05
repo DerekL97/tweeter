@@ -8,7 +8,7 @@ import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class LoadService extends Service{
+public abstract class LoadService extends Service{
 
 
     public interface GetFeedObserver extends ServiceObserverInterface{

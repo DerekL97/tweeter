@@ -9,7 +9,7 @@ import edu.byu.cs.tweeter.client.model.service.handler.GetFollowingHandler;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class Service {
+public abstract class Service {
 
     public interface ServiceObserverInterface {
         void handleFailure(String message);
