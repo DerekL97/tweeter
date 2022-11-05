@@ -1,4 +1,4 @@
 package service;
 
-public class FeedService {
+public class FeedService extends Service{
 }

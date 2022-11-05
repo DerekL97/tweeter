@@ -1,16 +1,28 @@
 package service;
 
+import net.request.FollowersRequest;
 import net.request.FollowingRequest;
+import net.request.IsFollowerRequest;
+import net.request.Request;
+import net.response.FollowersResponse;
 import net.response.FollowingResponse;
+import net.response.GetCountResponse;
+import net.response.IsFollowerResponse;
+import net.response.Response;
+
+import java.util.List;
+import java.util.Random;
 
 import dao.FollowDAO;
-
+import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.util.FakeData;
+import edu.byu.cs.tweeter.util.Pair;
 
 
 /**
  * Contains the business logic for getting the users a user is following.
  */
-public class FollowService {
+public class FollowService extends Service {
 
     /**
      * Returns the users that the user specified in the request is following. Uses information in
@@ -30,6 +42,7 @@ public class FollowService {
         return getFollowingDAO().getFollowees(request);
     }
 
+
     /**
      * Returns an instance of {@link FollowDAO}. Allows mocking of the FollowDAO class
      * for testing purposes. All usages of FollowDAO should get their FollowDAO
@@ -37,7 +50,32 @@ public class FollowService {
      *
      * @return the instance.
      */
-    FollowDAO getFollowingDAO() {
+    private FollowDAO getFollowingDAO() {
         return new FollowDAO();
+    }
+
+    public Response unFollow(String followee, String user, String authToken) {
+        return new Response(true, "Successfully unfollowed");//todo make this actually do stuff with DAO and throw an exception if necessary
+    }
+
+    public Response Follow(String followee, String user, String authToken) {
+        return new Response(true, "Successfully followed");//todo make this actually access database
+    }
+
+    public FollowersResponse getFollowers(FollowersRequest request) {
+        Pair data = FakeData.getInstance().getPageOfUsers(request.getLastItem(), request.getLimit(), request.getFollowee());
+        return new FollowersResponse(true, "Current Followers", (List<User>)data.getFirst(), (boolean) data.getSecond());
+    }
+
+    public IsFollowerResponse isFollower(IsFollowerRequest input) {
+        return new IsFollowerResponse(true, new Random().nextInt() > 0);
+    }
+
+    public GetCountResponse getFollowingCount(Request input) {
+        return new GetCountResponse(true, 20);
+    }
+
+    public GetCountResponse getFollowersCount(Request input) {
+        return new GetCountResponse(true, 20);
     }
 }

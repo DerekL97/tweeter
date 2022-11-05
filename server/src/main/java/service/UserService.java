@@ -1,13 +1,16 @@
 package service;
 
+import net.request.GetUserRequest;
 import net.request.LoginRequest;
+import net.response.GetUserResponse;
 import net.response.LoginResponse;
+import net.response.Response;
 
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.util.FakeData;
 
-public class UserService {
+public class UserService extends Service {
 
     public LoginResponse login(LoginRequest request) {
         if(request.getUsername() == null){
@@ -50,5 +53,10 @@ public class UserService {
      */
     FakeData getFakeData() {
         return FakeData.getInstance();
+    }
+
+    public GetUserResponse getUser(GetUserRequest input) {
+        User user = getFakeData().findUserByAlias(input.getUserAlias());
+        return new GetUserResponse(true, user);
     }
 }

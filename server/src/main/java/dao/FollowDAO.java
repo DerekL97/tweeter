@@ -49,7 +49,7 @@ public class FollowDAO {
 
         if(request.getLimit() > 0) {
             if (allFollowees != null) {
-                int followeesIndex = getFolloweesStartingIndex(request.getLastFolloweeAlias(), allFollowees);
+                int followeesIndex = getFolloweesStartingIndex(request.getLastItem().getAlias(), allFollowees);
 
                 for(int limitCounter = 0; followeesIndex < allFollowees.size() && limitCounter < request.getLimit(); followeesIndex++, limitCounter++) {
                     responseFollowees.add(allFollowees.get(followeesIndex));
@@ -59,7 +59,7 @@ public class FollowDAO {
             }
         }
 
-        return new FollowingResponse(responseFollowees, hasMorePages);
+        return new FollowingResponse(true, responseFollowees, hasMorePages);
     }
 
     /**
