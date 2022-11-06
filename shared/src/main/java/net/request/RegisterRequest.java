@@ -4,27 +4,30 @@ public class RegisterRequest {
     /**
      * The user's first name.
      */
-    public final String firstName;
+    public String firstName;
 
     /**
      * The user's last name.
      */
-    public final String lastName;
+    public String lastName;
 
     /**
      * The base-64 encoded bytes of the user's profile image.
      */
-    public final String image;
+    public String image;
 
     /**
      * The user's username (or "alias" or "handle"). E.g., "@susan".
      */
-    protected final String username;
+    protected String username;
 
     /**
      * The user's password.
      */
-    protected final String password;
+    protected String password;
+
+    public RegisterRequest() {
+    }
 
     public RegisterRequest(String firstName, String lastName, String image, String username, String password) {
         this.firstName = firstName;
@@ -32,5 +35,25 @@ public class RegisterRequest {
         this.image = image;
         this.username = username;
         this.password = password;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

@@ -3,6 +3,9 @@ package net.request;
 public class GetUserRequest {
     String userAlias;
 
+    public GetUserRequest() {
+    }
+
     public GetUserRequest(String userAlias) {
         this.userAlias = userAlias;
     }

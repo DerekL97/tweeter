@@ -2,6 +2,8 @@ package edu.byu.cs.tweeter.client.model.net;
 
 import com.google.gson.Gson;
 
+import edu.byu.cs.tweeter.model.domain.User;
+
 public class JsonSerializer {
 
     public static String serialize(Object requestInfo) {

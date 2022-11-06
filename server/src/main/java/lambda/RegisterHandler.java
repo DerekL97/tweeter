@@ -11,7 +11,6 @@ import service.LogInOutService;
 public class RegisterHandler implements RequestHandler<RegisterRequest, RegisterResponse> {
     @Override
     public RegisterResponse handleRequest(RegisterRequest input, Context context) {
-        RegisterResponse response = LogInOutService.registerNewUser(input);
-        return null;
+        return LogInOutService.registerNewUser(input);
     }
 }

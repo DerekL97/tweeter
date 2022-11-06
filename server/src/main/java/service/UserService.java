@@ -56,6 +56,12 @@ public class UserService extends Service {
 
     public GetUserResponse getUser(GetUserRequest input) {
         User user = getFakeData().findUserByAlias(input.getUserAlias());
-        return new GetUserResponse(true, user);
+        if(user == null) {
+            return new GetUserResponse(false, "Failed to findUser", null);
+        }
+        else{
+            return new GetUserResponse(true, "Found User", user);
+        }
+
     }
 }

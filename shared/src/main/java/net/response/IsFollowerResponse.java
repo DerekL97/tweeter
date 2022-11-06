@@ -1,7 +1,7 @@
 package net.response;
 
 public class IsFollowerResponse extends Response{
-    boolean isFollower;
+    private boolean isFollower;
     public IsFollowerResponse(boolean success, boolean isFollower) {
         super(success);
         this.isFollower = isFollower;
@@ -10,5 +10,13 @@ public class IsFollowerResponse extends Response{
     public IsFollowerResponse(boolean success, String message, boolean isFollower) {
         super(success, message);
         this.isFollower = isFollower;
+    }
+
+    public boolean isFollower() {
+        return isFollower;
+    }
+
+    public void setFollower(boolean follower) {
+        isFollower = follower;
     }
 }

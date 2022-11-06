@@ -7,6 +7,9 @@ public class FollowersRequest extends PagedRequest<User>{
 
     private User followee;
 
+    public FollowersRequest() {
+    }
+
     public FollowersRequest(AuthToken authToken, String followerAlias, int limit, User lastItem, User followee) {
         super(authToken, followerAlias, limit, lastItem);
         this.followee = followee;

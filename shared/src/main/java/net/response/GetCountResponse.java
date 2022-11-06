@@ -1,7 +1,7 @@
 package net.response;
 
 public class GetCountResponse extends Response{
-    int count;
+    private int count;
 
     public GetCountResponse(boolean success) {
         super(success);
@@ -12,4 +12,11 @@ public class GetCountResponse extends Response{
         this.count = count;
     }
 
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 }
