@@ -1,6 +1,6 @@
 package net.request;
 
-public class RegisterRequest {
+public class RegisterRequest extends Request{
     /**
      * The user's first name.
      */

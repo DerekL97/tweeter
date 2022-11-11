@@ -1,13 +1,15 @@
 package net.request;
 
-public class GetUserRequest {
+public class GetUserRequest extends Request{
     String userAlias;
+    String authToken;
 
-    public GetUserRequest() {
+    public GetUserRequest(String userAlias, String authToken) {
+        this.userAlias = userAlias;
+        this.authToken = authToken;
     }
 
-    public GetUserRequest(String userAlias) {
-        this.userAlias = userAlias;
+    public GetUserRequest() {
     }
 
     public String getUserAlias() {

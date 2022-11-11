@@ -12,7 +12,7 @@ public class UnFollowHandler implements RequestHandler<UnFollowRequest, Response
     @Override
     public Response handleRequest(UnFollowRequest input, Context context) {
         FollowService service = new FollowService();
-        return service.unFollow(input.getFollowee(), input.getUser(), input.getAuthToken());
+        return service.unFollow(input.getFollowee(), input.getUserHandle(), input.getAuthToken().token);
     }
 
 }

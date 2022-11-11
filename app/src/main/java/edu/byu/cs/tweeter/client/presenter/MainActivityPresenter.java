@@ -73,7 +73,7 @@ public class MainActivityPresenter extends Presenter {
             updateSelectedUserFollowingAndFollowers();
             view.updateFollowButton(removed);
 //            updateFollowButton(false);
-            view.followingButtonSetEnable(removed);
+            view.followingButtonSetEnable(true);
 //            followButton.setEnabled(true);
         }
 //        @Override
@@ -127,7 +127,7 @@ public class MainActivityPresenter extends Presenter {
         @Override
         public void setIsFollower(boolean isFollower) {
             view.updateFollowButton(isFollower);
-
+            view.followingButtonSetEnable(true);
         }
 
 //        @Override

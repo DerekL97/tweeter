@@ -9,9 +9,11 @@ import net.response.GetStoryResponse;
 import service.StatusService;
 
 public class GetStoryHandler implements RequestHandler<GetStoryRequest, GetStoryResponse> {
+
     @Override
     public GetStoryResponse handleRequest(GetStoryRequest input, Context context) {
         StatusService service = new StatusService();
         return service.getStory(input);
     }
+
 }

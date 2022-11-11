@@ -1,9 +1,18 @@
 package net.request;
 
-public class FollowRequest {
+public class FollowRequest extends Request{
     private String followee;
     private String user;
     private String authToken;
+
+    public FollowRequest(String followee, String user, String authToken) {
+        this.followee = followee;
+        this.user = user;
+        this.authToken = authToken;
+    }
+
+    private FollowRequest() {
+    }
 
     public String getFollowee() {
         return followee;

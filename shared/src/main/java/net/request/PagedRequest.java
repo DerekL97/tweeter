@@ -2,7 +2,7 @@ package net.request;
 
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 
-public class PagedRequest<T> {
+public class PagedRequest<T> extends Request{
 
 
     private AuthToken authToken;

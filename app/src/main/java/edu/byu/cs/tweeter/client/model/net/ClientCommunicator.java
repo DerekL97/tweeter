@@ -1,6 +1,7 @@
 package edu.byu.cs.tweeter.client.model.net;
 
 import net.TweeterRemoteException;
+import net.request.Request;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -28,7 +29,7 @@ class ClientCommunicator {
         void sendRequest(HttpURLConnection connection) throws IOException;
     }
 
-    <T> T doPost(String urlPath, final Object requestInfo, Map<String, String> headers, Class<T> returnType)
+    <T> T doPost(String urlPath, final Request requestInfo, Map<String, String> headers, Class<T> returnType)
             throws IOException, TweeterRemoteException {
         RequestStrategy requestStrategy = new RequestStrategy() {
             @Override
@@ -51,7 +52,7 @@ class ClientCommunicator {
         return doRequest(urlPath, headers, returnType, requestStrategy);
     }
 
-    <T> T doGet(String urlPath, Map<String, String> headers, Class<T> returnType)
+    <T> T doGet(String urlPath, final Request requestInfo, Map<String, String> headers, Class<T> returnType)
             throws IOException, TweeterRemoteException {
         RequestStrategy requestStrategy = new RequestStrategy() {
             @Override
@@ -60,7 +61,7 @@ class ClientCommunicator {
             }
 
             @Override
-            public void sendRequest(HttpURLConnection connection) {
+            public void sendRequest(HttpURLConnection connection) throws IOException {
                 // Nothing to send. For a get, the request is sent when the connection is opened.
             }
         };

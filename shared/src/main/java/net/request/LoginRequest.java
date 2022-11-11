@@ -1,9 +1,11 @@
 package net.request;
 
+import net.response.Response;
+
 /**
  * Contains all the information needed to make a login request.
  */
-public class LoginRequest {
+public class LoginRequest extends Request {
 
     private String username;
     private String password;

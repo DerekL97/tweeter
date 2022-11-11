@@ -1,5 +1,5 @@
 package net.request;
 
-public class IsFollowerRequest {
+public class IsFollowerRequest extends Request {
 
 }

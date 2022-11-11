@@ -12,8 +12,8 @@ public abstract class PagedUserTask extends PagedTask<User> {
         super(authToken, targetUser, limit, lastItem, messageHandler);
     }
 
-    @Override
-    protected final List<User> getUsersForItems(List<User> items) {
-        return items;
-    }
+//    @Override
+//    protected final List<User> getUsersForItems(List<User> items) {
+//        return items;
+//    }
 }

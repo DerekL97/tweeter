@@ -1,4 +1,4 @@
 package net.request;
 
-public class PostStatusRequest {
+public class PostStatusRequest extends Request{
 }

@@ -2,7 +2,7 @@ package net.request;
 
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 
-public class UnFollowRequest {
+public class UnFollowRequest extends Request{
     private String followee;
     private String userHandle;
     private AuthToken authToken;

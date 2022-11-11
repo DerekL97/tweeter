@@ -1,4 +1,4 @@
 package net.request;
 
-public class GetCountRequest {
+public class GetCountRequest extends Request{
 }

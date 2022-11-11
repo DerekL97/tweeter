@@ -2,21 +2,27 @@ package edu.byu.cs.tweeter.client.model.service.backgroundTask;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+
+import net.TweeterRemoteException;
+import net.request.Request;
+import net.response.RegisterResponse;
+import net.response.Response;
 
 import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.util.Pair;
 
 public abstract class AuthenticateTask extends BackgroundTask {
 
     public static final String USER_KEY = "user";
     public static final String AUTH_TOKEN_KEY = "auth-token";
+    private static final String LOG_TAG = "AuthenticateTask";
 
-    private User authenticatedUser;
+    protected User authenticatedUser;
 
-    private AuthToken authToken;
+    protected AuthToken authToken;
 
     /**
      * The user's username (or "alias" or "handle"). E.g., "@susan".
@@ -37,18 +43,34 @@ public abstract class AuthenticateTask extends BackgroundTask {
 
     @Override
     protected final void runTask()  throws IOException {
-        Pair<User, AuthToken> loginResult = runAuthenticationTask();
+//        Pair<User, AuthToken> loginResult = runAuthenticationTask();
+//
+//        authenticatedUser = loginResult.getFirst();
+//        authToken = loginResult.getSecond();
+        try {
+            Request request = getRequest();
+            Response response = getResponse(request);
 
-        authenticatedUser = loginResult.getFirst();
-        authToken = loginResult.getSecond();
-
-        // Call sendSuccessMessage if successful
-        sendSuccessMessage();
-        // or call sendFailedMessage if not successful
-        // sendFailedMessage()
+            if (response.isSuccess()) {
+                setVariables(response);
+                sendSuccessMessage();
+            } else {
+                sendFailedMessage(response.getMessage());
+            }
+        } catch(IOException | TweeterRemoteException ex){
+            Log.e(LOG_TAG, "Failed to get Paged Items", ex);
+            sendExceptionMessage(ex);
+        }
     }
 
-    protected abstract Pair<User, AuthToken> runAuthenticationTask();
+    protected abstract void setVariables(Response response);
+
+
+    protected abstract Response getResponse(Request request) throws IOException, TweeterRemoteException;
+
+    protected abstract Request getRequest();
+
+//    protected abstract Pair<User, AuthToken> runAuthenticationTask();
 
     @Override
     protected void loadSuccessBundle(Bundle msgBundle) {

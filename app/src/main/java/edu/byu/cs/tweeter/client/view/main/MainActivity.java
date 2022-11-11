@@ -197,23 +197,4 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         }
     }
 
-//    public String getFormattedDateTime() throws ParseException {
-//        SimpleDateFormat userFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-//        SimpleDateFormat statusFormat = new SimpleDateFormat("MMM d yyyy h:mm aaa");
-//
-//        return statusFormat.format(userFormat.parse(LocalDate.now().toString() + " " + LocalTime.now().toString().substring(0, 8)));
-//    }
-
-//    public void updateFollowButton(boolean removed) {//todo remove and replace with mine
-//        // If follow relationship was removed.
-//        if (removed) {
-//            followButton.setText(R.string.Follow);
-//            followButton.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-//        } else {
-//            followButton.setText(R.string.Following);
-//            followButton.setBackgroundColor(getResources().getColor(R.color.white));
-//            followButton.setTextColor(getResources().getColor(R.color.lightGray));
-//        }
-//    }
-
 }
