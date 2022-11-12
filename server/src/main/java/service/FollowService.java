@@ -13,7 +13,7 @@ import net.response.Response;
 import java.util.List;
 import java.util.Random;
 
-import dao.FollowDAO;
+import dao.FollowDummyDAO;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.util.FakeData;
 import edu.byu.cs.tweeter.util.Pair;
@@ -27,7 +27,7 @@ public class FollowService extends Service {
     /**
      * Returns the users that the user specified in the request is following. Uses information in
      * the request object to limit the number of followees returned and to return the next set of
-     * followees after any that were returned in a previous request. Uses the {@link FollowDAO} to
+     * followees after any that were returned in a previous request. Uses the {@link FollowDummyDAO} to
      * get the followees.
      *
      * @param request contains the data required to fulfill the request.
@@ -44,14 +44,14 @@ public class FollowService extends Service {
 
 
     /**
-     * Returns an instance of {@link FollowDAO}. Allows mocking of the FollowDAO class
+     * Returns an instance of {@link FollowDummyDAO}. Allows mocking of the FollowDAO class
      * for testing purposes. All usages of FollowDAO should get their FollowDAO
      * instance from this method to allow for mocking of the instance.
      *
      * @return the instance.
      */
-    private FollowDAO getFollowingDAO() {
-        return new FollowDAO();
+    private FollowDummyDAO getFollowingDAO() {
+        return new FollowDummyDAO();
     }
 
     public Response unFollow(String followee, String user, String authToken) {
