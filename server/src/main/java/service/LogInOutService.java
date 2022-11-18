@@ -13,7 +13,7 @@ public class LogInOutService extends Service{
         User registeredUser = FakeData.getInstance().getFirstUser();
         AuthToken authToken = FakeData.getInstance().getAuthToken();
 //        return new Pair<User, AuthToken>(registeredUser, authToken);
-        return new RegisterResponse(registeredUser, authToken);
+        return new RegisterResponse(true, registeredUser, authToken);
     }
 
     public Response logout() {
