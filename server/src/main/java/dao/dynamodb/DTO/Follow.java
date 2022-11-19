@@ -15,6 +15,8 @@ public class Follow {
     private String followee_last_name;
     private String followee_image_url;
 
+    private static final String IndexName = "followeeAlias-followerAlias-index";
+
     public Follow(String followerAlias, String followeeAlias, String follower_first_name,
                   String follower_last_name, String follower_image_url, String followee_first_name,
                   String followee_last_name, String followee_image_url) {
@@ -44,6 +46,7 @@ public class Follow {
 //    private int visit_count;
 
     @DynamoDbPartitionKey
+    @DynamoDbSecondarySortKey(indexNames = {IndexName})
     public String getFollowerAlias() {
         return followerAlias;
     }
@@ -53,6 +56,7 @@ public class Follow {
     }
 
     @DynamoDbSortKey
+    @DynamoDbSecondaryPartitionKey(indexNames = {IndexName})
     public String getFolloweeAlias() {
         return followeeAlias;
     }

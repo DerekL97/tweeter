@@ -22,15 +22,15 @@ public class FollowDynamoDBDAO_test {
     }
 
     @Test
-    public void follow_success(){
-        assert (followDAO.follow(follower, followee));
-    }
-
-    @Test
     public void unfollow_success(){
         assert (followDAO.unfollow(follower.getAlias(), followee.getAlias()));
     }
 
+    @Test
+    public void follow_success(){
+        assert (followDAO.follow(follower, followee));
+    }
+    
     @Test
     public void getFollowersTest_success(){
         List<User> followers = followDAO.getFollowers(followee.getAlias());
@@ -45,5 +45,10 @@ public class FollowDynamoDBDAO_test {
         assert (followees != null);
         assert(followees.size() != 0);
         System.out.println(followees);
+    }
+
+    @Test
+    public void isFollowerTest_success(){
+        assert (followDAO.isFollowing(follower.getAlias(), followee.getAlias()));
     }
 }

@@ -69,7 +69,7 @@ public class FollowDynamoDBDAO extends DynamoDBDAO implements FollowDAO {
 
             DynamoDbIndex<Follow> secIndex = enhancedClient.table(TableName, TableSchema.fromBean(Follow.class)) .index(IndexName);
             AttributeValue attVal = AttributeValue.builder()
-                    .n(followeeAlias)
+                    .s(followeeAlias)
                     .build();
 
             // Create a QueryConditional object that's used in the query operation.
@@ -83,13 +83,15 @@ public class FollowDynamoDBDAO extends DynamoDBDAO implements FollowDAO {
                     .limit(300) //todo change limit?
                     .build());
 
-            // Display the results.
+            // Return the results
+            List<User> followers = new ArrayList<>();
             results.forEach(page -> {
                 List<Follow> allFollow = page.items();
                 for (Follow myFollow: allFollow) {
-                    System.out.println("The movie title is " + myFollow.getFollowerAlias() + ". The year is " + myFollow.getFollower_first_name());
+                    followers.add(new User(myFollow.getFollower_first_name(), myFollow.getFollowee_last_name(), myFollow.getFollowerAlias(), myFollow.getFollowee_image_url()));
                 }
             });
+            return followers;
 
         } catch (DynamoDbException e) {
             System.err.println(e.getMessage());
@@ -126,6 +128,26 @@ public class FollowDynamoDBDAO extends DynamoDBDAO implements FollowDAO {
 
     @Override
     public boolean isFollowing(String followerAlias, String followeeAlias) {
+        try{
+            DynamoDbTable<Follow> mappedTable = enhancedClient.table(TableName, TableSchema.fromBean(Follow.class));
+            QueryConditional queryConditional = QueryConditional.keyEqualTo(Key.builder()
+                    .partitionValue(followerAlias)
+                    .sortValue(followeeAlias)
+                    .build());
+
+            // Get items in the table and write out the ID value.
+            Iterator<Follow> results = mappedTable.query(queryConditional).items().iterator();
+            List<User> result = new ArrayList<>();
+
+            if (results.hasNext()) {
+                return true;
+            }
+            return false;
+
+        } catch (DynamoDbException e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
         return false;
     }
 }
