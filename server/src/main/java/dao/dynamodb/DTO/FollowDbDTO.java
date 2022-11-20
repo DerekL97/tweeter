@@ -3,7 +3,7 @@ package dao.dynamodb.DTO;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;
 
 @DynamoDbBean
-public class Follow {
+public class FollowDbDTO extends DynamoDbDTO{
     private String followerAlias;
     private String followeeAlias;
 
@@ -17,9 +17,9 @@ public class Follow {
 
     private static final String IndexName = "followeeAlias-followerAlias-index";
 
-    public Follow(String followerAlias, String followeeAlias, String follower_first_name,
-                  String follower_last_name, String follower_image_url, String followee_first_name,
-                  String followee_last_name, String followee_image_url) {
+    public FollowDbDTO(String followerAlias, String followeeAlias, String follower_first_name,
+                       String follower_last_name, String follower_image_url, String followee_first_name,
+                       String followee_last_name, String followee_image_url) {
         this.followerAlias = followerAlias;
         this.followeeAlias = followeeAlias;
         this.follower_first_name = follower_first_name;
@@ -30,7 +30,7 @@ public class Follow {
         this.followee_image_url = followee_image_url;
     }
 
-    public Follow(String followerAlias, String followeeAlias) {
+    public FollowDbDTO(String followerAlias, String followeeAlias) {
         this.followerAlias = followerAlias;
         this.followeeAlias = followeeAlias;
         this.follower_first_name = null;
@@ -41,14 +41,19 @@ public class Follow {
         this.followee_image_url = null;
     }
 
-    public Follow() {
+    public FollowDbDTO() {
     }
 //    private int visit_count;
 
     @DynamoDbPartitionKey
     @DynamoDbSecondarySortKey(indexNames = {IndexName})
+    @DynamoDbAttribute("followerAlias")
     public String getFollowerAlias() {
         return followerAlias;
+    }
+    @Override
+    public String getPartitionKey(){
+        return getFollowerAlias();
     }
 
     public void setFollowerAlias(String follower_alias) {
@@ -57,8 +62,13 @@ public class Follow {
 
     @DynamoDbSortKey
     @DynamoDbSecondaryPartitionKey(indexNames = {IndexName})
+    @DynamoDbAttribute("followeeAlias")
     public String getFolloweeAlias() {
         return followeeAlias;
+    }
+    @Override
+    public String getSortKey(){
+        return getFolloweeAlias();
     }
 
     public void setFolloweeAlias(String followeeAlias) {

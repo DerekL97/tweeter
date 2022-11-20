@@ -8,7 +8,7 @@ import java.util.List;
 import dao.dynamodb.FollowDynamoDBDAO;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class FollowDynamoDBDAO_test {
+public class FollowDbDTODynamoDBDAO_test {
     FollowDynamoDBDAO followDAO;
     User follower;
     User followee;
@@ -30,7 +30,7 @@ public class FollowDynamoDBDAO_test {
     public void follow_success(){
         assert (followDAO.follow(follower, followee));
     }
-    
+
     @Test
     public void getFollowersTest_success(){
         List<User> followers = followDAO.getFollowers(followee.getAlias());
