@@ -71,6 +71,7 @@ public class FollowDbDTO extends DynamoDbDTO{
         return getFolloweeAlias();
     }
 
+
     public void setFolloweeAlias(String followeeAlias) {
         this.followeeAlias = followeeAlias;
     }

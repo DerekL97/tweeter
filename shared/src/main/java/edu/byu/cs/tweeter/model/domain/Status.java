@@ -19,7 +19,7 @@ public class Status implements Serializable {
     /**
      * String representation of the date/time at which the status was sent.
      */
-    public String datetime;
+    public int datetime;
     /**
      * URLs contained in the post text.
      */
@@ -32,7 +32,7 @@ public class Status implements Serializable {
     public Status() {
     }
 
-    public Status(String post, User user, String datetime, List<String> urls, List<String> mentions) {
+    public Status(String post, User user, int datetime, List<String> urls, List<String> mentions) {
         this.post = post;
         this.user = user;
         this.datetime = datetime;
@@ -48,7 +48,7 @@ public class Status implements Serializable {
         return user;
     }
 
-    public String getDate() {
+    public int getDate() {
         return datetime;
     }
 

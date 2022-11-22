@@ -1,8 +1,11 @@
 package dao.dynamodb;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import dao.dynamodb.DTO.DynamoDbDTO;
 import dao.dynamodb.DTO.FollowDbDTO;
@@ -123,6 +126,74 @@ public abstract class DynamoDBDAO<T extends DynamoDbDTO, U> {
         }
         return new ArrayList<>();
     }
+
+    private static boolean isNonEmptyString(String value) {
+        return (value != null && value.length() > 0);
+    }
+
+    protected List<U> paginatedQuery(String partitionKey, int pageSize, T lastRow){
+        DynamoDbTable<T> table = getTable();
+        Key key = Key.builder()
+                .partitionValue(partitionKey)
+                .build();
+
+        QueryEnhancedRequest.Builder requestBuilder = QueryEnhancedRequest.builder()
+                .queryConditional(QueryConditional.keyEqualTo(key));
+        // If you use iterators, it auto-fetches next page always, so instead limit the stream below
+        //.limit(5);
+
+        if(lastRow != null) {
+            // Build up the Exclusive Start Key (telling DynamoDB where you left off reading items)
+            Map<String, AttributeValue> startKey = new HashMap<>();
+            startKey.put(getPartitionLabel(), AttributeValue.builder().s(lastRow.getPartitionKey()).build());
+            startKey.put(getSortLabel(), AttributeValue.builder().n(lastRow.getSortKeyInt() + "").build());
+
+            requestBuilder.exclusiveStartKey(startKey);
+        }
+
+        QueryEnhancedRequest request = requestBuilder.build();
+
+        List<T> list = table.query(request)
+                .items()
+                .stream()
+                .limit(pageSize)
+                .collect(Collectors.toList());
+
+        /*
+         * Alternative Implementation 1 of the line above, using forEach
+         */
+        //List<Visit> visits = new ArrayList<>();
+        //table.query(request).items().stream().limit(pageSize).forEach(v -> visits.add(v));
+        //return visits;
+
+        /*
+         * Alternative Implementation 2 of the line above, using a for loop
+         */
+        //List<Visit> visits = new ArrayList<>();
+        //for(Visit visit : table.query(request).items()) {
+        //    // stop iteration if we've reached the number of items asked for
+        //    if(visits.size() >= pageSize)
+        //        break;
+        //    visits.add(visit);
+        //}
+        //return visits;
+
+        /*
+         * Alternative Implementation 3 of the line above, using a while loop
+         */
+        //List<Visit> visits = new ArrayList<>();
+        //Iterator<Visit> it = table.query(request).items().iterator();
+        //// while there are elements to iterate over, and we haven't reached the number of items asked for
+        //while(it.hasNext() && visits.size() < pageSize){
+        //    Visit visit = it.next();
+        //    visits.add(visit);
+        //}
+        //return visits;
+
+    }
+
+    protected abstract String getPartitionLabel();
+    protected abstract String getSortLabel();
 
     protected boolean updateItem(String PartitionKey, int SortKey, T newItem){
 

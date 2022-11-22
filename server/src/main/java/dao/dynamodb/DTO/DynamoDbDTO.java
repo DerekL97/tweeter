@@ -8,4 +8,7 @@ public abstract class DynamoDbDTO {
     public String getSortKey(){
         return null;
     }
+    public int getSortKeyInt(){
+        return 0;
+    }
 }

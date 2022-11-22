@@ -55,7 +55,9 @@ public class FollowService extends Service {
     }
 
     public Response unFollow(String followee, String user, String authToken) {
-        return new Response(true, "Successfully unfollowed");//todo make this actually do stuff with DAO and throw an exception if necessary
+//        return new Response(true, "Successfully unfollowed");
+        boolean unfollowed = daoFactory.getFollowDAO().unfollow(user, followee);
+        return new Response(true, "Successfully unfollowed");
     }
 
     public Response Follow(String followee, String user, String authToken) {

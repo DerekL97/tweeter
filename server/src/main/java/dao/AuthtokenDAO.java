@@ -8,4 +8,5 @@ public interface AuthtokenDAO {
     boolean clearExpiredTokens(String userAlias);
     boolean updateExpireTime(AuthToken authToken);
     String getUserAlias(String authToken);
+    boolean isAuthorized(String authtoken, String userAlias);
 }

@@ -24,6 +24,16 @@ public class AuthTokenDynamoDBDAO extends DynamoDBDAOwithIndex<AuthtokenDbDTO, A
     private static final int ExpireAfter = 14400;
 
     @Override
+    protected String getPartitionLabel() {
+        return null;
+    }
+
+    @Override
+    protected String getSortLabel() {
+        return null;
+    }
+
+    @Override
     protected AuthToken getModelFromDTO(AuthtokenDbDTO rec) {
         return new AuthToken(rec.getAuthtoken(), rec.getUserAlias(), rec.getTime_stamp());
     }
@@ -69,6 +79,13 @@ public class AuthTokenDynamoDBDAO extends DynamoDBDAOwithIndex<AuthtokenDbDTO, A
     public String getUserAlias(String authToken) {
         List<AuthToken> tokens = query(authToken);
         return tokens.get(0).getUserAlias();
+    }
+
+    @Override
+    public boolean isAuthorized(String authtoken, String userAlias) {
+        clearExpiredTokens(userAlias);
+        List<AuthToken> list = query(authtoken);
+        return list.size() > 0;
     }
 
 
