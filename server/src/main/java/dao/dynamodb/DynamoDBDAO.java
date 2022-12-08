@@ -8,16 +8,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import dao.dynamodb.DTO.DynamoDbDTO;
-import dao.dynamodb.DTO.FollowDbDTO;
-import edu.byu.cs.tweeter.model.domain.User;
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
-import software.amazon.awssdk.core.pagination.sync.SdkIterable;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbIndex;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
-import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
-import software.amazon.awssdk.enhanced.dynamodb.model.Page;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
 import software.amazon.awssdk.regions.Region;
@@ -158,7 +152,11 @@ public abstract class DynamoDBDAO<T extends DynamoDbDTO, U> {
                 .stream()
                 .limit(pageSize)
                 .collect(Collectors.toList());
-
+        List<U> returnlist = new ArrayList<>();
+        for(T item : list){
+            returnlist.add(getModelFromDTO(item));
+        }
+        return returnlist;
         /*
          * Alternative Implementation 1 of the line above, using forEach
          */
@@ -219,6 +217,7 @@ public abstract class DynamoDBDAO<T extends DynamoDbDTO, U> {
     }
 
     protected abstract U getModelFromDTO(T rec);
+//    protected abstract T getDTOFromModel(U Model);
 
     protected DynamoDbTable<T> getTable(){
         if (table == null){

@@ -13,7 +13,11 @@ import net.response.Response;
 import java.util.List;
 import java.util.Random;
 
+import dao.DAOFactory;
+import dao.FollowDAO;
 import dao.FollowDummyDAO;
+import edu.byu.cs.tweeter.model.domain.AuthToken;
+import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.util.FakeData;
 import edu.byu.cs.tweeter.util.Pair;
@@ -39,7 +43,14 @@ public class FollowService extends Service {
         } else if(request.getLimit() <= 0) {
             throw new RuntimeException("[Bad Request] Request needs to have a positive limit");
         }
-        return getFollowingDAO().getFollowees(request);
+        checkAuthToken(request.getAuthToken());
+        //todo put in try catch
+        List<User> moreUsers = daoFactory.getFollowDAO().getFollowees(request.getFollowerAlias(), request.getLastItem(), request.getLimit());
+        List<User> check = daoFactory.getFollowDAO().getFollowees(request.getFollowerAlias(), moreUsers.get(moreUsers.size()-1), request.getLimit());
+        boolean hasMorePages = !(check.size() == 0);
+        return new FollowingResponse(true, moreUsers, hasMorePages);
+
+
     }
 
 
@@ -50,34 +61,54 @@ public class FollowService extends Service {
      *
      * @return the instance.
      */
-    private FollowDummyDAO getFollowingDAO() {
-        return new FollowDummyDAO();
-    }
 
-    public Response unFollow(String followee, String user, String authToken) {
+
+    public Response unFollow(String followee, String user, AuthToken authToken) {
 //        return new Response(true, "Successfully unfollowed");
+        checkAuthToken(authToken);
         boolean unfollowed = daoFactory.getFollowDAO().unfollow(user, followee);
-        return new Response(true, "Successfully unfollowed");
+        String message;
+        if(unfollowed) message = "Successfully unfollowed";
+        else message = "Failed to unfollow!";
+        return new Response(unfollowed, message);
     }
 
-    public Response Follow(String followee, String user, String authToken) {
-        return new Response(true, "Successfully followed");//todo make this actually access database
+    public Response Follow(User followee, User user, AuthToken authToken) {
+        checkAuthToken(authToken);
+        boolean followed = daoFactory.getFollowDAO().follow(user, followee);
+        String message;
+        if(followed) message = "Successfully Followed";
+        else message = "Failed to Follow!";
+        return new Response(followed, message);
     }
 
     public FollowersResponse getFollowers(FollowersRequest request) {
-        Pair data = FakeData.getInstance().getPageOfUsers(request.getLastItem(), request.getLimit(), request.getFollowee());
-        return new FollowersResponse(true, "Current Followers", (List<User>)data.getFirst(), (boolean) data.getSecond());
+//        Pair data = FakeData.getInstance().getPageOfUsers(request.getLastItem(), request.getLimit(), request.getFollowee());
+        checkAuthToken(request.getAuthToken());
+        FollowDAO followDAO = daoFactory.getFollowDAO();
+        List<User> followers = followDAO.getFollowers(request.getFollowerAlias());
+        List<User> followers2 = followDAO.getFollowers(request.getFollowerAlias());
+        boolean hasMoreFollowers = followers2.size() > 0;
+        return new FollowersResponse(true, "Current Followers", followers, hasMoreFollowers);
+
     }
 
     public IsFollowerResponse isFollower(IsFollowerRequest input) {
-        return new IsFollowerResponse(true, new Random().nextInt() > 0);
+        checkAuthToken(input.getAuthToken());
+        boolean isFollower = daoFactory.getFollowDAO().isFollowing(input.getFollower().getAlias(), input.getFollowee().getAlias());
+        return new IsFollowerResponse(true, isFollower);
     }
 
     public GetCountResponse getFollowingCount(Request input) {
-        return new GetCountResponse(true, 20);
+        checkAuthToken(input.getAuthToken());
+        int following = daoFactory.getFollowDAO().getFollowingCount(input.getRequester().getAlias());
+
+        return new GetCountResponse(true, following);
     }
 
     public GetCountResponse getFollowersCount(Request input) {
-        return new GetCountResponse(true, 20);
+        checkAuthToken(input.getAuthToken());
+        int followers = daoFactory.getFollowDAO().getFollowerCount(input.getRequester().getAlias());
+        return new GetCountResponse(true, followers);
     }
 }

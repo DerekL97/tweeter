@@ -57,7 +57,7 @@ public class PostStatusTask extends AuthenticatedTask {
     }
 
     private Request getRequest() {
-        return new PostStatusRequest();
+        return new PostStatusRequest(status);
     }
 
 }

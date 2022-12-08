@@ -5,7 +5,6 @@ import edu.byu.cs.tweeter.model.domain.AuthToken;
 public class PagedRequest<T> extends Request{
 
 
-    private AuthToken authToken;
     private String followerAlias;
     private int limit;
     private T lastItem;
@@ -31,23 +30,7 @@ public class PagedRequest<T> extends Request{
         this.lastItem = lastItem;
     }
 
-    /**
-     * Returns the auth token of the user who is making the request.
-     *
-     * @return the auth token.
-     */
-    public AuthToken getAuthToken() {
-        return authToken;
-    }
 
-    /**
-     * Sets the auth token.
-     *
-     * @param authToken the auth token.
-     */
-    public void setAuthToken(AuthToken authToken) {
-        this.authToken = authToken;
-    }
 
     /**
      * Returns the follower whose followees are to be returned by this request.

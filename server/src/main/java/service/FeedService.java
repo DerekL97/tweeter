@@ -11,7 +11,7 @@ import edu.byu.cs.tweeter.util.Pair;
 
 public class FeedService extends Service{
     public GetFeedResponse getFeed(GetFeedRequest input) {
-//        Pair<List<Status>, Boolean> data = FakeData.getInstance().getPageOfStatus(input.getLastItem(), input.getLimit());
+        checkAuthToken(input.getAuthToken());
         List<Status> status = daoFactory.getFeedDAO().getPage(input.getFollowerAlias(), input.getLimit(), input.getLastItem());
         List<Status> check = daoFactory.getFeedDAO().getPage(input.getFollowerAlias(), input.getLimit(), status.get(status.size()-1));
         boolean moreData = !(check.size() == 0);

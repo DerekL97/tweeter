@@ -41,7 +41,7 @@ public class FollowDbDTODynamoDBDAO_test {
 
     @Test
     public void getFolloweesTest_success(){
-        List<User> followees = followDAO.getFollowees(follower.getAlias());
+        List<User> followees = followDAO.getFollowees(follower.getAlias(), followee, 10);
         assert (followees != null);
         assert(followees.size() != 0);
         System.out.println(followees);

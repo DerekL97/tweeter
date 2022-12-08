@@ -8,6 +8,8 @@ public interface FollowDAO {
     boolean follow(User follower, User followee);
     boolean unfollow(String exFollowerAlias, String followeeAlias);
     List<User> getFollowers(String followeeAlias);
-    List<User> getFollowees(String followerAlias);
+    List<User> getFollowees(String followerAlias, User lastItem, int limit);
+    int getFollowerCount(String followeeAlias);
+    int getFollowingCount(String followerAlias);
     boolean isFollowing(String followerAlias, String followeeAlias);
 }

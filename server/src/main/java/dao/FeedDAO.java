@@ -6,5 +6,5 @@ import edu.byu.cs.tweeter.model.domain.Status;
 
 public interface FeedDAO {
     List<Status> getPage(String receiverAlias, int limit, Status lastStatus);
-    void addStatus(String posterAlias, Status status);
+    void addStatus(String posterAlias, String PosterimageURL, Status status);
 }

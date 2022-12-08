@@ -6,6 +6,21 @@ import edu.byu.cs.tweeter.model.domain.User;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 
 public class UserDynamoDBDAO extends DynamoDBDAO implements UserDAO {
+    private static final String TableName = "User";
+    private static final String PartitionKey = "UserAlias";
+//    private static final String SortKey = "followeeAlias";
+//    private static final String IndexName = "followeeAlias-followerAlias-index";
+//    private static final String FollowerName = "follower_name";
+//    private static final String FolloweeName = "followee_name";
+    @Override
+    protected String getPartitionLabel() {
+        return null;
+    }
+
+    @Override
+    protected String getSortLabel() {
+        return null;
+    }
 
     @Override
     protected Object getModelFromDTO(DynamoDbDTO rec) {

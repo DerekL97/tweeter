@@ -22,11 +22,13 @@ public class FollowTask extends AuthenticatedTask {
      * The user that is being followed.
      */
     private final User followee;
+    private final User follower;
 
 
-    public FollowTask(AuthToken authToken, User followee, Handler messageHandler) {
+    public FollowTask(AuthToken authToken, User followee, User follower, Handler messageHandler) {
         super(authToken, messageHandler);
         this.followee = followee;
+        this.follower = follower;
     }
 
     @Override
@@ -60,7 +62,7 @@ public class FollowTask extends AuthenticatedTask {
     }
 
     private FollowRequest getRequest() {
-        return new FollowRequest(followee.alias, "randomdude", authToken.token);//todo replace randomdude
+        return new FollowRequest(followee, follower, authToken);
     }
 
 }

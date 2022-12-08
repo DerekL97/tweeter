@@ -62,7 +62,7 @@ public class MainActivityPresenter extends Presenter {
             followService.startUnfollowTask(Cache.getInstance().getCurrUserAuthToken(), selectedUser, new startUnfollowTaskObserver());
             view.displayMessage("Removing " + selectedUser.getName() + "...");
         } else {
-            followService.startFollowTask(Cache.getInstance().getCurrUserAuthToken(), selectedUser, new startFollowTaskObserver());
+            followService.startFollowTask(Cache.getInstance().getCurrUserAuthToken(), selectedUser, new User(), new startFollowTaskObserver());
             view.displayMessage("Adding " + selectedUser.getName() + "...");
 //            Toast.makeText(MainActivity.this, "Adding " + selectedUser.getName() + "...", Toast.LENGTH_LONG).show();
         }
@@ -244,7 +244,7 @@ public class MainActivityPresenter extends Presenter {
         return statusFormat.format(userFormat.parse(LocalDate.now().toString() + " " + LocalTime.now().toString().substring(0, 8)));
     }
 
-    public List<String> parseURLs(String post) {//todo move this?
+    public List<String> parseURLs(String post) {
         List<String> containedUrls = new ArrayList<>();
         for (String word : post.split("\\s")) {
             if (word.startsWith("http://") || word.startsWith("https://")) {

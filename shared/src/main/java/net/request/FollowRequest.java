@@ -1,40 +1,35 @@
 package net.request;
 
-public class FollowRequest extends Request{
-    private String followee;
-    private String user;
-    private String authToken;
+import edu.byu.cs.tweeter.model.domain.AuthToken;
+import edu.byu.cs.tweeter.model.domain.User;
 
-    public FollowRequest(String followee, String user, String authToken) {
+public class FollowRequest extends Request{
+    private User followee;
+    private User user;
+
+    public FollowRequest(User followee, User user, AuthToken authToken) {
+        super(authToken, user);
         this.followee = followee;
         this.user = user;
-        this.authToken = authToken;
     }
 
     private FollowRequest() {
     }
 
-    public String getFollowee() {
+    public User getFollowee() {
         return followee;
     }
 
-    public void setFollowee(String followee) {
+    public void setFollowee(User followee) {
         this.followee = followee;
     }
 
-    public String getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(String user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
-    public String getAuthToken() {
-        return authToken;
-    }
-
-    public void setAuthToken(String authToken) {
-        this.authToken = authToken;
-    }
 }

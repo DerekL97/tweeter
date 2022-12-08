@@ -7,7 +7,12 @@ import edu.byu.cs.tweeter.model.domain.AuthToken;
 public abstract class Service {
     protected DAOFactory daoFactory = new DynamodbDAOFactory();
 
-    protected boolean checkAuthToken(AuthToken token){
-        daoFactory.getAuthtokenDAO().
+    protected boolean checkAuthToken(AuthToken token) throws RuntimeException{
+        if (daoFactory.getAuthtokenDAO().isAuthorized(token.getToken(), token.getUserAlias())){
+            return true;
+        }
+        else {
+            throw new RuntimeException("[Bad Request] Request AuthToken is invalid]");
+        }
     }
 }

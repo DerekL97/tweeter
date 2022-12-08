@@ -43,8 +43,8 @@ public class FollowService extends Service {
     public interface startFollowTaskObserver extends ServiceObserverInterface {
         void FollowReturn(Boolean removed);
     }
-    public void startFollowTask(AuthToken currUserAuthToken, User selectedUser, MainActivityPresenter.startFollowTaskObserver observer) {
-        FollowTask followTask = new FollowTask(currUserAuthToken, selectedUser, new FollowHandler(observer));
+    public void startFollowTask(AuthToken currUserAuthToken, User selectedUser, User loggedUser, MainActivityPresenter.startFollowTaskObserver observer) {
+        FollowTask followTask = new FollowTask(currUserAuthToken, selectedUser, loggedUser, new FollowHandler(observer));
         startTask(followTask);
 //        ExecutorService executor = Executors.newSingleThreadExecutor();
 //        executor.execute(followTask);

@@ -6,11 +6,11 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import net.request.RegisterRequest;
 import net.response.RegisterResponse;
 
-import service.LogInOutService;
+import service.UserService;
 
 public class RegisterHandler implements RequestHandler<RegisterRequest, RegisterResponse> {
     @Override
     public RegisterResponse handleRequest(RegisterRequest input, Context context) {
-        return LogInOutService.registerNewUser(input);
+        return new UserService().registerNewUser(input);
     }
 }

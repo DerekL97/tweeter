@@ -90,6 +90,16 @@ public class AuthTokenDynamoDBDAO extends DynamoDBDAOwithIndex<AuthtokenDbDTO, A
 
 
     @Override
+    protected DynamoDbIndex<AuthtokenDbDTO> getIndex() {
+        return enhancedClient.table(getTable().tableName(), TableSchema.fromBean(AuthtokenDbDTO.class)).index(getIndexName());
+    }
+
+    @Override
+    protected String getIndexName() {
+        return IndexName;
+    }
+
+    @Override
     protected AuthToken getModelFromDTOIndex(AuthtokenDbDTO myFollow) {
         return new AuthToken(myFollow.getAuthtoken(), myFollow.getUserAlias(), myFollow.getTime_stamp());
     }
