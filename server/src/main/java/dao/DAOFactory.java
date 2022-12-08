@@ -1,10 +1,11 @@
 package dao;
 
 public interface DAOFactory {
-    AuthtokenDAO getAuthtokenDAO();
-    FeedDAO getFeedDAO();
     FollowDAO getFollowDAO();
-    ImageDAO getImageDAO();
+    FeedDAO getFeedDAO();
     StoryDAO getStoryDAO();
+    AuthTokenDAO getAuthTokenDAO();
     UserDAO getUserDAO();
+    ImageDAO getImageDAO();
+    QueueDAO getQueueDAO();
 }

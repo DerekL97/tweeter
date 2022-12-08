@@ -3,8 +3,9 @@ package dao;
 import java.util.List;
 
 import edu.byu.cs.tweeter.model.domain.Status;
+import edu.byu.cs.tweeter.util.Pair;
 
 public interface FeedDAO {
-    List<Status> getPage(String receiverAlias, int limit, Status lastStatus);
-    void addStatus(String posterAlias, String PosterimageURL, Status status);
+    Boolean postStatus(Status status, List<String> followerAliases);
+    Pair<List<Status>, Boolean> getFeed(String targetUserAlias, int limit, Status lastStatus);
 }

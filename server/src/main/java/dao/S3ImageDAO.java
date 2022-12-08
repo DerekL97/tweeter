@@ -1,7 +1,6 @@
-package dao.dynamodb;
+package dao;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -10,15 +9,15 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import java.io.ByteArrayInputStream;
 import java.util.Base64;
 
-import dao.ImageDAO;
 
-public class ImageS3DAO implements ImageDAO {
+public class S3ImageDAO implements ImageDAO {
+    private final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion("us-east-1").build();
+    private static final String bucketName = "bentweeterpics";
 
-    private final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion("us-west-1").build();
-    private static final String bucketName = "tweeteruserphotos";
+
 
     @Override
-    public String putImage(String userAlias, String imageBytes) {
+    public String uploadImage(String userAlias, String imageBytes) {
         byte[] bytes = Base64.getDecoder().decode(imageBytes);
         ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
 
@@ -27,6 +26,5 @@ public class ImageS3DAO implements ImageDAO {
 
         return s3.getUrl(bucketName, userAlias).toString();
     }
-
 
 }

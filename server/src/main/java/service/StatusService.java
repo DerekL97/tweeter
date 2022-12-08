@@ -1,7 +1,5 @@
 package service;
 
-import com.google.gson.JsonSerializer;
-
 import net.request.GetStoryRequest;
 import net.request.PostStatusRequest;
 import net.response.GetStoryResponse;
@@ -9,10 +7,7 @@ import net.response.Response;
 
 import java.util.List;
 
-import dao.StoryDAO;
 import edu.byu.cs.tweeter.model.domain.Status;
-import edu.byu.cs.tweeter.util.FakeData;
-import edu.byu.cs.tweeter.util.Pair;
 
 public class StatusService extends Service{
     public Response postStatus(PostStatusRequest input) {
