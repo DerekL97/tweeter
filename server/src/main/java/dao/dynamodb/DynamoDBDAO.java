@@ -73,6 +73,7 @@ public abstract class DynamoDBDAO<T extends DynamoDbDTO, U> {
         }
         return true;
     }
+
     public List<U> query(String partitionKey, String sortKey){
         try{
             DynamoDbTable<T> mappedTable = getTable();
@@ -96,6 +97,27 @@ public abstract class DynamoDBDAO<T extends DynamoDbDTO, U> {
             System.exit(1);
         }
         return new ArrayList<>();
+    }
+
+    public List<T> simpleQuery(String partitionKey){
+
+        try{
+            DynamoDbTable<T> mappedTable = getTable();
+            QueryConditional queryConditional = QueryConditional.keyEqualTo(Key.builder()
+                    .partitionValue(partitionKey)
+                    .build());
+
+            // Get items in the table and write out the ID value.
+            return mappedTable.query(queryConditional).items().stream().collect(Collectors.toList());
+
+
+
+        } catch (DynamoDbException e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
+        return new ArrayList<>();
+
     }
     public List<U> query(String partitionKey){
         try{

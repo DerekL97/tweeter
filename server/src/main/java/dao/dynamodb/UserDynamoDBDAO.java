@@ -1,11 +1,14 @@
 package dao.dynamodb;
 
+import java.util.List;
+
 import dao.UserDAO;
 import dao.dynamodb.DTO.DynamoDbDTO;
 import dao.dynamodb.DTO.StoryDbDTO;
 import dao.dynamodb.DTO.UserDbDTO;
 import edu.byu.cs.tweeter.model.domain.User;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
+import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 
 public class UserDynamoDBDAO extends DynamoDBDAO<UserDbDTO, User> implements UserDAO {
@@ -68,22 +71,57 @@ public class UserDynamoDBDAO extends DynamoDBDAO<UserDbDTO, User> implements Use
     public int getFollowCount(String userAlias) {
         UserDbDTO searchfor = new UserDbDTO();
         searchfor.setUserAlias(userAlias);
-        query(userAlias);
+        List<UserDbDTO> userRow = simpleQuery(userAlias);
+        if (userRow.size() < 0){
+            return 0;
+        }
+        else{
+            return userRow.get(0).getNumFollowers();
+        }
     }
 
-    @Override
-    public void incrementFollowerCount(int newFollowers) {
 
+    @Override
+    public void incrementFollowerCount(String userAlias, int newFollowers) {
+        DynamoDbTable<UserDbDTO> table = getTable();
+        Key key = Key.builder()
+                .partitionValue(userAlias)
+                .build();
+
+        // load it if it exists
+        UserDbDTO userDbDTO = table.getItem(key);
+        if(userDbDTO != null) {
+            userDbDTO.setNumFollowers(userDbDTO.getNumFollowers() + newFollowers);
+            table.updateItem(userDbDTO);
+        }
     }
 
     @Override
     public int getFolloweeCount(String userAlias) {
-        return 0;
+        UserDbDTO searchfor = new UserDbDTO();
+        searchfor.setUserAlias(userAlias);
+        List<UserDbDTO> userRow = simpleQuery(userAlias);
+        if (userRow.size() < 0){
+            return 0;
+        }
+        else{
+            return userRow.get(0).getNumFollowees();
+        }
     }
 
     @Override
-    public void incrementFolloweeCount(int newFollowees) {
+    public void incrementFolloweeCount(String userAlias, int newFollowees) {
+        DynamoDbTable<UserDbDTO> table = getTable();
+        Key key = Key.builder()
+                .partitionValue(userAlias)
+                .build();
 
+        // load it if it exists
+        UserDbDTO userDbDTO = table.getItem(key);
+        if(userDbDTO != null) {
+            userDbDTO.setNumFollowees(userDbDTO.getNumFollowees() + newFollowees);
+            table.updateItem(userDbDTO);
+        }
     }
 
 
