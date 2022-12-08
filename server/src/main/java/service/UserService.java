@@ -9,7 +9,12 @@ import net.response.LoginResponse;
 import net.response.RegisterResponse;
 import net.response.Response;
 
+import org.apache.commons.codec.binary.Base64;
+
 import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Random;
 
@@ -20,17 +25,46 @@ import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.util.FakeData;
 
 public class UserService extends Service {
-    public RegisterResponse registerNewUser(RegisterRequest input) {
-        String userURL = daoFactory.getImageDAO().putImage(input.getUsername(), input.getImage());
-        User user = new User(input.getFirstName(), input.getLastName(), input.getUsername(), userURL);
+    public RegisterResponse registerNewUser(RegisterRequest request) {
+        if(request.getFirstName() == null){
+            throw new RuntimeException("[Bad Request] Missing a firstname");
+        } else if(request.getLastName() == null) {
+            throw new RuntimeException("[Bad Request] Missing a lastname");
+        } else if(request.getUsername() == null) {
+            throw new RuntimeException("[Bad Request] Missing a username");
+        } else if(request.getPassword() == null) {
+            throw new RuntimeException("[Bad Request] Missing a password");
+        } else if(request.getImage() == null) {
+            throw new RuntimeException("[Bad Request] Missing a profile pic");
+        }
 
-        UserDAO userDAO = daoFactory.getUserDAO();
-        userDAO.addUser(user);
+        if (daoFactory.getUserDAO().getUser(request.getUsername()) != null) {
+            return new RegisterResponse(false, "Username is already taken!", null, null);
+        }
 
-        AuthtokenDAO authTokendao = daoFactory.getAuthtokenDAO();
-        AuthToken authToken = generateAuthToken(input.getUsername());
-        authTokendao.addAuthtoken(authToken.getToken(), user.getAlias());
-        return new RegisterResponse(true, user, authToken);
+        String imageURL = daoFactory.getImageDAO().putImage(request.getUsername(), request.getImage());
+
+
+        User user = new User(request.getFirstName(),
+                request.getLastName(),
+                request.getUsername(),
+                imageURL);
+
+        byte[] salt = generateSalt();
+        byte[] hashedPassword;
+        try {
+            hashedPassword = getHashWithSalt(request.getPassword(), salt);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            throw new RuntimeException("[Internal Error] could not hash password");
+        }
+
+        daoFactory.getUserDAO().addUser(user, new String(hashedPassword), new String(salt));
+
+        AuthToken token = generateAuthToken(request.getUsername());
+
+        daoFactory.getAuthtokenDAO().addAuthtoken(token.getToken(), request.getUsername());
+        return new RegisterResponse(true, user, token);
     }
 
     public Response logout(Request input) {
@@ -52,35 +86,7 @@ public class UserService extends Service {
         return new LoginResponse(user, authToken);
     }
 
-    /**
-     * Returns the dummy user to be returned by the login operation.
-     * This is written as a separate method to allow mocking of the dummy user.
-     *
-     * @return a dummy user.
-     */
-//    User getDummyUser() {
-//        return getFakeData().getFirstUser();
-//    }
 
-    /**
-     * Returns the dummy auth token to be returned by the login operation.
-     * This is written as a separate method to allow mocking of the dummy auth token.
-     *
-     * @return a dummy auth token.
-     */
-//    AuthToken getDummyAuthToken() {
-//        return getFakeData().getAuthToken();
-//    }
-
-    /**
-     * Returns the {@link FakeData} object used to generate dummy users and auth tokens.
-     * This is written as a separate method to allow mocking of the {@link FakeData}.
-     *
-     * @return a {@link FakeData} instance.
-     */
-//    FakeData getFakeData() {
-//        return FakeData.getInstance();
-//    }
 
     public GetUserResponse getUser(GetUserRequest input) {
         checkAuthToken(input.getAuthToken());
@@ -93,6 +99,30 @@ public class UserService extends Service {
             return new GetUserResponse(true, "Found User", user);
         }
 
+    }
+
+    public byte[] generateSalt() {
+        SecureRandom random = new SecureRandom();
+        byte bytes[] = new byte[20];
+        random.nextBytes(bytes);
+        return bytes;
+    }
+
+
+    public byte[] getHashWithSalt(String input, byte[] salt) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("sha-256");
+        digest.reset();
+        digest.update(salt);
+        byte[] hashedBytes = digest.digest(stringToByte(input));
+        return hashedBytes;
+    }
+    public byte[] stringToByte(String input) {
+        if (Base64.isBase64(input)) {
+            return Base64.decodeBase64(input);
+
+        } else {
+            return Base64.encodeBase64(input.getBytes());
+        }
     }
 
     public AuthToken generateAuthToken(String userAlias){
